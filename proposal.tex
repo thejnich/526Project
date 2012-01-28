@@ -1,8 +1,8 @@
 \documentclass[11pt]{article}   % list options between brackets
 \usepackage{fullpage}              % list packages between braces
-\usepackage{listings}
 \usepackage{color}
 \usepackage{hyperref}
+\usepackage{cite}
 
 \hypersetup{
     colorlinks,
@@ -33,15 +33,20 @@ Need better title for section. We should in detail explain problem(s) we are try
 
 \section{Solution}
 Detailed explanation of our proposed solution. Subsection for each part maybe (client/browser extension, server, central key repo).
+Mention method for revoking a key in the central repo, so that if a users private key is compromised they can protect themselves somewhat. This may already be implemented, i dunno.
 
 \section{Deliverables and Timeline}
 Specific deliverables and timeline for each
 
-
 \section{Related Works}
-Maybe discuss similar existing tech. pwdhash, ssh public key auth.
+Maybe discuss similar existing tech. pwdhash, ssh public key auth.\\
+Some papers that we can maybe reference in proposal:
+\begin{itemize}
+\item domino effect of pwd reuse \cite{domino}
+\item study of password habits \cite{habits}
+\end{itemize}
 
-\section{Works Cited}
-if we need to cite anything
+\bibliographystyle{plain}
+\bibliography{refs}{}
 
 \end{document}
