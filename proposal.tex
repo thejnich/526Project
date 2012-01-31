@@ -42,15 +42,9 @@ Mention method for revoking a key in the central repo, so that if a users privat
 Specific deliverables and timeline for each
 
 \section{Related Works} \label{sec:relate}
-The topic of web authentication has been a hot one for some time, which is why it's no surprise that there are numerous other projects that have tried to create different solutions.  Among these other projects is a project called pwdhash at Stanford.  Pwdhash uses a pair of pieces of information (password, domain-name) that is hashed by a publicly available hash function which can be computed on any computer.  The hash is then sent as the password to the website.  With this setup, the user is protected from phishing websites that pretend to be another domain, and the user's password is not sent over the connection – just a hash of it.  Therefore an eavesdropper cannot steal the password and gain access to all sites that the user has re-used that password.  Pwdhash is available as a browser plug-in.\\
+The topic of web authentication has been a hot one for some time, which is why it's no surprise that there are numerous other projects that have tried to create different solutions.  Among these other projects is a project called pwdhash at Stanford \cite{pwdhash}.  Pwdhash uses a pair of pieces of information (password, domain-name) that is hashed by a publicly available hash function which can be computed on any computer.  The hash is then sent as the password to the website.  With this setup, the user is protected from phishing websites that pretend to be another domain, and the user's password is not sent over the connection – just a hash of it.  Therefore an eavesdropper cannot steal the password and gain access to all sites that the user has re-used that password.  Pwdhash is available as a browser plug-in.\\
 Public key authentication has also been around for a while, the most reputed implementation of which is ssh.  It works by storing public and private keys in a folder on the user's drive, and when the user attempts a connection to a remote server, public key encryption is used in each exchange of information.\\
 Challenge response authentication is a very broad topic.  The most basic type of challenge response would be a server requesting a password from the user in order to authenticate.  More involved extensions of challenge response include zero-knowledge password proof (ZKPP), a procedure where only enough data is exchanged between one party (the prover) and another party (the verifier) to let the verifier know that the prover knows the password.  In ZKPP, nothing is revealed except the fact that the prover knows the password.  There are a plethora of different challenge response authentication methods, and our use of the idea is only a single part of this paper's authentication scheme.
-
-Some papers that we can maybe reference in proposal:
-\begin{itemize}
-\item domino effect of pwd reuse \cite{domino}
-\item study of password habits \cite{habits}
-\end{itemize}
 
 \bibliographystyle{plain}
 \bibliography{refs}{}
