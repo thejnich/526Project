@@ -14,7 +14,7 @@
 
 \begin{document}
 
-\title{\bf CPSC 526 - Project Proposal \\ \emph{catchy smart sounding title TBD}}   % type title between braces
+\title{\bf CPSC 526 - Project Proposal \\ \emph{Public Key Web Authentication}}   % type title between braces
 \author{Masud Kahn, Kyle Milz, Jeff Nicholson}         % type author(s) between braces
 \date{February 1, 2012}    % type date between braces
 \maketitle
@@ -22,23 +22,26 @@
 \tableofcontents
 \pagebreak
 \begin{abstract}
-some abstract statements about web security and authentication and how we are going to solve all the worlds problems, including famine.
+Passwords are a necessary part of everyones online activities. They are also a pain. Remembering strong, unique passwords for multiple sites is extremely difficult. This results in users relying on weak passwords, like '123456', which leads to security and privacy concerns. What if there was a way to handle authentication that did not rely on passwords? We hope to provide such an authentication system. We suggest using public key cryptography, which after initial set up, allows users to seamlessly and securely authenticate to web sites, without the need for cumbersome passwords.\\
+We will provide a simple authentication protocol, lightweight server side implementation and browser plug in, which can be easily adopted by anyone. A lightweight server side implementation means service providers do not need to make large changes to their implementations. A browser plug-in handles the client side and hides the authentication process from the user, allowing seamless, secure authentication.
 \end{abstract}
 \pagebreak
 \section{Introduction}
-Introduce problem we are trying to solve (passwords, secure auth etc.). Brief intro of our proposed solution
+Until now, it was almost essential for the average person to remember a large set of username/password combinations for access to some of their most valued belongings and data : Facebook, Twitter, email accounts, cloud storage services, online banking, online shopping, forums, and a plethora of other web applications. Web sites and web based applications need user authentication, to ensure the client is who they say they are. Currently, this authentication is handled by requiring the user to set a username/password pair upon registration with the site. This password should be unique, hard to guess, and only known to the user. Then, in theory, only the user will be able to provide this password and authenticate with the site. In practice, this is not the case. Many users choose very weak passwords \cite{habits}, or reuse passwords across sites \cite{domino}. The few users who do use uniques, strong passwords, are then required to remember these passwords, or have their browser store them (in plain text).\\
+We propose a new authentication system, which uses public key encryption to handle authentication. After initial set up, authentication is handled with a challenge response between server and client. This will happen behind the scenes and require no user interaction.\\
+The proposed paper will discuss a secure new method of authentication that will no longer require users to remember even a single password for access to their most valued websites and domains. Section \ref{sec:prob} gives greater detail to the problem we hope to solve. Section \ref{sec:sol} gives an overview of our proposed solution to the problem. Section \ref{sec:deliv} gives an outline of what we hope to accomplish, in terms of concrete software, as well as a loose timeline. Section \ref{sec:relate} briefly cites similar work, and how it differs from our proposed topic.
 
-\section{Problem}
-Until now, it was almost essential for the average person to remember a large set of username/password combinations for access to some of their most valued belongings & data : facebook, twitter, email accounts, cloud storage services, online banking, online shopping, forums, and a plethora of other web applications.  No simpler and more widely scalable method of authentication was ever devised, than to ask a human user to memorize a set of characters and be able to communicate that set, in proper order, at authentication time.  The strength of this method is that the space of possible letter/number combinations is so large that it would be difficult for an attacker to find out any one person's password for any one website/domain, unless the user willingly gave it up.  The weaknesses of this method, however, are that forcing a user to authenticate everytime they access a domain is cumbersome at best, and that human memories are not very reliable in comparison to computer memory.  Large scale studies on web password habits have shown that the assortment of passwords most people use is not as secure as they might think[web password habits reference].  Widespread reuse of passwords has limited the long-term viability of the username/password authentication strategy[password reuse paper reference], and companies are being urged to move on to smart card or biometric authentication systems.  However, these systems come with their own constraints, and are only practical in certain settings – unlike a password, when a fingerprint pattern is stolen and replicated it cannot be changed, therefore biometrics is only secure when the network and biometric capture devices are secure.  A new and widely scalable solution to the problem of authentication can be found, and by piecing together a few different solutions of past, it can also be implemented quite easily.  This paper will discuss a secure new method of authentication that will no longer require users to remember even a single password for access to their most valued websites and domains.
+\section{Problem} \label{sec:prob}
+No simpler and more widely scalable method of authentication was ever devised, than to ask a human user to memorize a set of characters and be able to communicate that set, in proper order, at authentication time.  The strength of this method is that the space of possible letter/number combinations is so large that it would be difficult for an attacker to find out any one person's password for any one website/domain, unless the user willingly gave it up.  The weaknesses of this method, however, are that forcing a user to authenticate every time they access a domain is cumbersome at best, and that human memories are not very reliable in comparison to computer memory.  Large scale studies on web password habits have shown that the assortment of passwords most people use is not as secure as they might think \cite{habits}.  Widespread reuse of passwords has limited the long-term viability of the username/password authentication strategy \cite{domino}, and companies are being urged to move on to smart card or biometric authentication systems.  However, these systems come with their own constraints, and are only practical in certain settings. Unlike a password, when a fingerprint pattern is stolen and replicated it cannot be changed, therefore biometrics is only secure when the network and biometric capture devices are secure.  A new and widely scalable solution to the problem of authentication can be found, and by piecing together a few different solutions of past, it can also be implemented quite easily.  
 
-\section{Solution}
-Detailed explanation of our proposed solution. Subsection for each part maybe (client/browser extension, server, central key repo).
+\section{Solution} \label{sec:sol}
+Detailed explanation (but this is just a proposal, so don't worry too much about implementation level details) of our proposed solution. Subsection for each part maybe (client/browser extension, server, central key repo).
 Mention method for revoking a key in the central repo, so that if a users private key is compromised they can protect themselves somewhat. This may already be implemented, i dunno.
 
-\section{Deliverables and Timeline}
+\section{Deliverables and Timeline} \label{sec:deliv}
 Specific deliverables and timeline for each
 
-\section{Related Works}
+\section{Related Works} \label{sec:relate}
 Maybe discuss similar existing tech. pwdhash, ssh public key auth.\\
 Some papers that we can maybe reference in proposal:
 \begin{itemize}
