@@ -39,8 +39,8 @@ The high level architecture of the system has 3 main components, the public key 
 \begin{enumerate}
 	\item Client sends an email address and a public key to a key server using, for example, gpg --send-keys.
 	\item Client registers for web service using the same email address as provided to the public key server, a password is also chosen at this point to fall back on in case private keys are lost/compromised/not available.
-	\item Whenever the client wants to authenticate with the content server, the client sends the email address corresponding to their public key to the content server, the content server remotely fetches the public key corresponding to the email address and does a challenge response with the client.
-	\item The client decodes the challenge response and sends back the answer to the server.
+	\item Whenever the client wants to authenticate with the content server, the server sends the email address corresponding to the clients public key to the content server, the content server remotely fetches the public key corresponding to the email address and does a challenge response with the client.
+	\item The client decodes the challenge response with their private key and sends back the answer to the server.
 	\item The server either accepts or declines the challenge response. If accepted, an authorization token is stored on the client in the form of a cookie, the client uses this cookie whenever it makes requests to the server.
 \end{enumerate}
 
