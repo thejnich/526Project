@@ -5,10 +5,10 @@
 all: proposal.pdf
 
 proposal.pdf: proposal.tex refs.bib
-	pdflatex proposal.tex
-	bibtex proposal
-	pdflatex proposal.tex
-	pdflatex proposal.tex
+	pdflatex proposal.tex        # first pass
+	bibtex proposal              # extract reference data
+	pdflatex proposal.tex        # matches citations/references
+	pdflatex proposal.tex        # finishes all cross referencing
 
 # This is ugly, rm -rf proposal.{aux,bbl,blg,...} doesn't work though
 clean:
