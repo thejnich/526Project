@@ -38,6 +38,38 @@ No simpler and more widely scalable method of authentication was ever devised, t
 Detailed explanation (but this is just a proposal, so don't worry too much about implementation level details) of our proposed solution. Subsection for each part maybe (client/browser extension, server, central key repo).
 Mention method for revoking a key in the central repo, so that if a users private key is compromised they can protect themselves somewhat. This may already be implemented, i dunno.
 
+The high level architecture of the system has 3 main components, the public key repository, the web service server, and the client accessing the web service. Other important aspects of the solution are key revocation and regular passwords. \\
+
+The protocol for authentication: \\
+\\
+1) Client sends an email address and a public key to a key server using, for example, gpg --send-keys. \\
+2) Client registers for web service using the same email address as provided to the public key server, a password is also chosen at this point to fall back on in case private keys are lost/comprimised/not available. \\
+3) Whenever the client wants to authenticate with the content server, the client sends the email address corresponding to their public key to the content server, the content server remotely fetches the public key corresponding to the email address and does a challenge response with the client. \\
+4) The client decodes the challenge response and sends back the answer to the server. \\
+5) The server either accepts or declines the challenge response. If accepted, an authorization token is stored on the client in the form of a cookie, the client uses this cookie whenever it makes requests to the server. \\
+
+\subsection{Key Repository} \label{sec:sol_key_repository}
+This key repository stores <email address, public key> pairs in a searchable database. The purpose of this is to establish authenticity of public keys using webs of trust. The key server must be secure and resistant against attacks. PGP key servers offer these features and will be used for this project, as implementing and maintaining a key server is out of the scope of this project. \\
+Keys can be submitted via gpg --send-keys. This dependency is heavy weight and not all people will want this extra hassle, however man-in-the-middle attacks are quite easy if webs of trust cannot be used. \\
+
+\subsection{Content Server} \label{sec:sol_server}
+Minimizing the amount of code that needs to be on the server side was an important design constraint. The barrier for deployment of server side code is directly proportional to the amount of changes. \\
+Upon receiving an authentication request, typically an email address, the content server makes a remote request to the key server for the email addresses' corresponding public key. Upon obtaining the public key, the server generates a random byte string and encodes it with the public key. This is then sent to the client for decoding. \\
+Upon decoding, the client sends a hash of the decrypted random bytes. The server checks that this hash in fact matches a hash of the original random bytes it generated and sent. If the check is successful, an authentication cookie is given to the client which the client uses in each authenticated request. If the check is unsuccessful, authentication is denied. \\
+The content server then keeps track of the authentication tokens it has issued and provides content based on them.
+
+\subsection{Client/Browser Extension} \label{sec:sol_client}
+In this scheme the client does most of the work, which is important in mitigating denial of service attacks. 
+
+\subsection{Key Revocation} \label{sec:sol_key_revo}
+When using public/private keys one must always consider what happens if a private key is lost or compromised. A key revocation mechanism is already part of the PGP key server. 
+
+\subsection{Passwords} \label{sec:sol_pw}
+The system will use password based authentication in addition to the new authentication scheme that is proposed. This is used in case a private key is unavailable like the user being at a public computer instead of their own private one.
+
+The solution proposed here shows the protocol that is necessary to have secure authentication between the clients and servers.
+
+
 \section{Deliverables and Timeline} \label{sec:deliv}
 Specific deliverables and timeline for each
 
