@@ -59,15 +59,17 @@ Upon decoding, the client sends a hash of the decrypted random bytes. The server
 The content server then keeps track of the authentication tokens it has issued and provides content based on them.
 
 \subsection{Client/Browser Extension} \label{sec:sol_client}
-In this scheme the client does most of the work, which is important in mitigating denial of service attacks. 
+In this scheme the client does most of the work, which is important in mitigating denial of service attacks.  \\
+The client is responsible for sending authentication requests to the content server, typically an email address associated with their public keys. The content server then does a challenge response with the client. \\
+Two possible behaviours are going to be investigated for the clients half of the challenge response. \\
+1) Make an ssh-agent/equivalent extension for the browser to allow no dialog decryption using ssh private key \\
+2) Use a dialog box for the user to enter their private key password, or alternatively if using a password-less private key then no dialog box would be needed.
 
 \subsection{Key Revocation} \label{sec:sol_key_revo}
 When using public/private keys one must always consider what happens if a private key is lost or compromised. A key revocation mechanism is already part of the PGP key server. 
 
 \subsection{Passwords} \label{sec:sol_pw}
 The system will use password based authentication in addition to the new authentication scheme that is proposed. This is used in case a private key is unavailable like the user being at a public computer instead of their own private one.
-
-The solution proposed here shows the protocol that is necessary to have secure authentication between the clients and servers.
 
 
 \section{Deliverables and Timeline} \label{sec:deliv}
