@@ -73,8 +73,8 @@ The system will use password based authentication in addition to the new authent
 \section{Deliverables and Timeline} \label{sec:deliv}
 The timeline will be split into roughly two equal sections, client side and server side modifications, each taking roughly one month to complete:
 \begin{itemize}
-	\item A single client side public key implementation must be done, most likely in Java-script. Browser extensions may have to be written for seamless login behaviours.
-	\item A server side implementation must be done per web service that wants to enable this authentication system. That includes public key retrieval, and a public key implementation. Languages used here include perl, ruby, python, asp, cgi, etc.
+	\item A single client side public key implementation, as described in Section \ref{sec:sol_client},  must be done, most likely in Java-script. Browser extensions may have to be written for seamless login behaviours.
+	\item A server side implementation, as described in Section \ref{sec:sol_server},  must be done per web service that wants to enable this authentication system. That includes public key retrieval, and a public key implementation. Languages used here include perl, ruby, python, asp, cgi, etc.
 \end{itemize}
 
 The aim is to port the new authentication system to as many back-ends as possible to ease integration but because of manpower and time constrains at least one back-end will be implemented. If time permits more back-ends will be coded.
