@@ -71,7 +71,13 @@ The system will use password based authentication in addition to the new authent
 
 
 \section{Deliverables and Timeline} \label{sec:deliv}
-Specific deliverables and timeline for each
+The timeline will be split into roughly two equal sections, client side and server side modifications, each taking roughly one month to complete:
+\begin{itemize}
+	\item A single client side public key implementation must be done, most likely in Java-script. Browser extensions may have to be written for seamless login behaviours.
+	\item A server side implementation must be done per web service that wants to enable this authentication system. That includes public key retrieval, and a public key implementation. Languages used here include perl, ruby, python, asp, cgi, etc.
+\end{itemize}
+
+The aim is to port the new authentication system to as many back-ends as possible to ease integration but because of manpower and time constrains at least one back-end will be implemented. If time permits more back-ends will be coded.
 
 \section{Related Works} \label{sec:relate}
 The topic of web authentication has been a hot one for some time, which is why it's no surprise that there are numerous other projects that have tried to create different solutions.  Among these other projects is a project called pwdhash at Stanford \cite{pwdhash}.  Pwdhash uses a pair of pieces of information (password, domain-name) that is hashed by a publicly available hash function which can be computed on any computer.  The hash is then sent as the password to the website.  With this setup, the user is protected from phishing websites that pretend to be another domain, and the user's password is not sent over the connection – just a hash of it.  Therefore an eavesdropper cannot steal the password and gain access to all sites that the user has re-used that password.  Pwdhash is available as a browser plug-in.\\
