@@ -15,7 +15,7 @@
 \begin{document}
 
 \title{\bf CPSC 526 - Project Proposal \\ \emph{Public Key Web Authentication}}
-\author{Masud Kahn, Kyle Milz, Jeff Nicholson}
+\author{Masud Khan, Kyle Milz, Jeff Nicholson}
 \date{February 1, 2012} 
 \maketitle
 
@@ -27,8 +27,8 @@ We will provide a simple authentication protocol, lightweight server side implem
 \end{abstract}
 \pagebreak
 \section{Introduction}
-Until now, it was almost essential for the average person to remember a large set of username/password combinations for access to some of their most valued belongings and data : Facebook, Twitter, email accounts, cloud storage services, online banking, online shopping, forums, and a plethora of other web applications. Web sites and web based applications need user authentication, to ensure the client is who they say they are. Currently, this authentication is handled by requiring the user to set a username/password pair upon registration with the site. This password should be unique, hard to guess, and only known to the user. Then, in theory, only the user will be able to provide this password and authenticate with the site. In practice, this is not the case. Many users choose very weak passwords \cite{habits}, or reuse passwords across sites \cite{domino}. The few users who do use uniques, strong passwords, are then required to remember these passwords, or have their browser store them (in plain text).\\
-We propose a new authentication system, which uses public key encryption to handle authentication. After initial set up, authentication is handled with a challenge response between server and client. This will happen behind the scenes and require no user interaction. The system will be more secure than standard passwords. It will not be susceptible to phishing attacks or password leaks due to servers being compromised attacked.\\
+Until now, it was almost essential for the average person to remember a large set of username/password combinations for access to some of their most valued belongings and data : Facebook, Twitter, email accounts, cloud storage services, online banking, online shopping, forums, and a plethora of other web applications. Web sites and web based applications need user authentication, to ensure the client is who they say they are. Currently, this authentication is handled by requiring the user to set a username/password pair upon registration with the site. This password should be unique, hard to guess, and only known to the user. Then, in theory, only the user will be able to provide this password and authenticate with the site. In practice, this is not the case. Many users choose very weak passwords \cite{habits}, or reuse passwords across sites \cite{domino}. The few users who do use unique, strong passwords, are then required to remember these passwords, or have their browser store them (in plain text).\\
+We propose a new authentication system, which uses public key encryption to handle authentication. After initial set up, authentication is handled with a challenge response between server and client. This will happen behind the scenes and require no user interaction. The system will be more secure than standard passwords. It will not be susceptible to phishing attacks or password leaks due to servers being compromised by an attack.\\
 The proposed paper will discuss a secure new method of authentication that will no longer require users to remember even a single password for access to their most valued websites and domains. Section \ref{sec:prob} gives greater detail to the problem we hope to solve. Section \ref{sec:sol} gives an overview of our proposed solution to the problem. Section \ref{sec:deliv} gives an outline of what we hope to accomplish, in terms of concrete software, as well as a loose timeline. Section \ref{sec:relate} briefly cites similar work, and how it differs from our proposed topic.
 
 \section{Problem} \label{sec:prob}
@@ -45,7 +45,7 @@ The high level architecture of the system has 3 main components, the public key 
 \end{enumerate}
 
 \subsection{Key Repository} \label{sec:sol_key_repository}
-This key repository stores <email address, public key> pairs in a searchable database. The purpose of this is to establish authenticity of public keys using webs of trust. The key server must be secure and resistant against attacks. PGP key servers offer these features and will be used for this project, as implementing and maintaining a key server is out of the scope of this project. \\
+This key repository stores $\langle$email address, public key$\rangle$ pairs in a searchable database. The purpose of this is to establish authenticity of public keys using webs of trust. The key server must be secure and resistant against attacks. PGP key servers offer these features and will be used for this project, as implementing and maintaining a key server is out of the scope of this project. \\
 Keys can be submitted via gpg --send-keys. This dependency is heavy weight and not all people will want this extra hassle, however man-in-the-middle attacks are quite easy if webs of trust cannot be used. \\
 
 \subsection{Content Server} \label{sec:sol_server}
@@ -73,8 +73,8 @@ The system will use password based authentication in addition to the new authent
 \section{Deliverables and Timeline} \label{sec:deliv}
 The timeline will be split into roughly two equal sections, client side and server side modifications, each taking roughly one month to complete:
 \begin{itemize}
-	\item A single client side public key implementation, as described in Section \ref{sec:sol_client}, must be done, most likely in Java-script. Browser extensions may have to be written for seamless login behaviours.
-	\item A server side implementation, as described in Section \ref{sec:sol_server}, must be done per web service that wants to enable this authentication system. That includes public key retrieval, and a public key implementation. Languages used here include perl, ruby, python, asp, cgi, etc.
+	\item A single client side public key implementation must be done, most likely in Java-script. Browser extensions may have to be written for seamless login behaviours.
+	\item A server side implementation must be done per web service that wants to enable this authentication system. That includes public key retrieval, and a public key implementation. Languages used here include perl, ruby, python, asp, cgi, etc.
 \end{itemize}
 
 The aim is to port the new authentication system to as many back-ends as possible to ease integration but because of manpower and time constrains at least one back-end will be implemented. If time permits more back-ends will be coded.
