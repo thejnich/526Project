@@ -1,0 +1,28 @@
+<html>
+<head>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+</head>
+<body>
+	<p>Sample Perl backend for public key crypto</p>
+
+	<form action="javascript:true;" id="my_form"  > 
+		<input type="text" name="login_name" />
+	</form>
+	<div id="result">
+	</div>
+
+	<script type="text/javascript">
+		$("#my_form").submit(function() {
+			$.ajax({
+				type: "POST",
+				url: "/cgi-bin/get-pubkey.cgi",
+				data: $("#my_form").serializeArray(),
+				success: function(data) {
+					$("#result").html(data);
+				}
+			});
+			return false;
+		});
+	</script>
+</body>
+</html>

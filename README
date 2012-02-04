@@ -1,5 +1,8 @@
-README
 
-A project to augment current authentication schemes.
+To run a web server (lighttpd is the only one supported at this time), run
+
+	./run-backend --perl
+
+All the code and server config for the perl backend is in perl/
 
 
