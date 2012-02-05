@@ -16,6 +16,9 @@ fi
 
 if [ "$1" == "--ruby" ]; then
 	echo -ne "\e[1;31m"
-	echo "running ruby backend."
+	echo "launching ruby on rails backend"
 	echo -ne "\e[0m"
+	pushd ruby
+	rails server
+	popd
 fi
