@@ -11,10 +11,17 @@
                             /_/   \_\__,_|\__|_| |_|
  
 
-To run a web server (lighttpd is the only one supported at this time), run
 
-	./run-backend --perl
+To run a web server, pick one of
 
-All the code and server config for the perl backend is in perl/
+	./run-backend <--perl|--ruby>
 
+The perl backend is brought to you by lighttpd and perl, the ruby backend is a rails application.
+
+
+DEPENDENCIES
+------------
+
+./run-backend --perl : requires lighttpd
+./run-backend --ruby : requires ruby on rails
 
