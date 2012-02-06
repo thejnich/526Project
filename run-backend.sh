@@ -10,7 +10,7 @@ if [ "$1" == "--perl" ]; then
 	echo -ne "\e[1;36m"
 	echo "launching lighttpd perl backend"
 	echo -ne "\e[0m"
-	echo "the server can be accessed via 127.0.0.1:8080 in a web browser"
+	echo -e " -> the server can be accessed via 127.0.0.1:8080 in a web browser\n"
 	lighttpd -f perl/conf/lighttpd.conf -D
 fi
 
