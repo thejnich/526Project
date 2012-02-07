@@ -22,6 +22,12 @@ The perl backend is brought to you by lighttpd and perl, the ruby backend is a r
 DEPENDENCIES
 ------------
 
-./run-backend --perl : requires lighttpd
-./run-backend --ruby : requires ruby on rails
+./run-backend --perl
+
+This requires lighttpd to be installed, along with the libwww-perl, HTTP-Message, Crypt-OpenSSL-RSA, Crypt-OpenSSL-Random perl libraries. Note than the names may be different on different distributions (yay) these are for Gentoo.
+
+
+./run-backend --ruby
+
+This requires the ruby application rails.
 
