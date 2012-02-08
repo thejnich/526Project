@@ -11,7 +11,7 @@ if [ "$1" == "--perl" ]; then
 	echo "launching lighttpd perl backend"
 	echo -ne "\e[0m"
 	echo -e " -> the server can be accessed via 127.0.0.1:8080 in a web browser\n"
-	lighttpd -f perl/conf/lighttpd.conf -D
+	lighttpd -f conf/perl/lighttpd.conf -D
 fi
 
 if [ "$1" == "--ruby" ]; then
