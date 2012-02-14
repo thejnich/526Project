@@ -1,4 +1,5 @@
-#!/bin/sh
+#!/bin/bash
+
 
 if [ $# -ne 1 ]; then
 	echo "Must specify one backend to run, one of"
