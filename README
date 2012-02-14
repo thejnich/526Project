@@ -53,7 +53,7 @@ gpgAuth-chrome (chromium only)
 gpgAuth-npapi
 	- cross browser solution so one plugin works across all np-api based browsers
 	- http://gpgauth.org/projects/gpgauth-npapi/
-	- uses another plugin to get browser-independent implementation
+	- uses another plugin to get browser-independent implementation (firebreath)
 	  < kind of crappy that this brings in yet another dependency >
 
 
@@ -69,9 +69,8 @@ pecl-gnupg (Gentoo package name) gnupg perl extension.
 ./run-backend --perl
 
 This requires lighttpd and its cgi modules to be installed, along with the 
-libwww-perl, HTTP-Message, Crypt-OpenSSL-RSA, Crypt-OpenSSL-Random perl 
-libraries. Note than the names may be different on different distributions 
-(yay) these are for Gentoo.
+libwww-perl, HTTP-Message, Crypt-OpenPGP perl libraries. Note than the names may 
+be different on different distributions (yay) these are for Gentoo.
 
 
 ./run-backend --ruby
