@@ -23,6 +23,32 @@
                      :   : :   : :  :      :      :   : :  
  
 
+USEFULNESS
+----------
+
+Some places that this scheme could be used (aka could use a backend):
+
+	- openwrt sign on page
+	- reddit
+	- slashdot
+	- hacker news
+	- ebay
+	- paypal
+	- ucalgary
+	- github
+	- gentoo bug wiki, forum, ..
+	- gmail
+	- linkedin
+	- anywhere you need an account
+
+	- facebook
+	- google+
+	- heroku
+	- lwn.net
+	- royalbank.ca
+	- airuc web auth
+
+
 BACK END
 --------
 
@@ -76,4 +102,5 @@ be different on different distributions (yay) these are for Gentoo.
 ./run-backend --ruby
 
 This requires the ruby application rails.
+
 
