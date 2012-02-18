@@ -9,12 +9,12 @@ header('X-GPGAuth-Requested: false');
 // a "?page" querystring variable in this example is the logout page.
 // All of these paths must be relative to the root of the domain. Nothing else will
 // be permitted by the client.
-header('X-GPGAuth-Verify-URL: /tests/php/index.php?server_verify');
-header('X-GPGAuth-Login-URL: /tests/php/index.php?login');
-header('X-GPGAuth-Logout-URL: /tests/php/index.php?logout');
+header('X-GPGAuth-Verify-URL: /index.php?server_verify');
+header('X-GPGAuth-Login-URL: /index.php?login');
+header('X-GPGAuth-Logout-URL: /index.php?logout');
 // This points to an ACII armored public key (can be multiple keys in one file)
 // that is used to allow the client to import the servers pubic key.
-header('X-GPGAuth-Pubkey-URL: /tests/gpgauth.org.pub');
+header('X-GPGAuth-Pubkey-URL: /localhost.pub');
 $CURRENT_PAGE = "gpgAuth Authentication tests start";
 $PAGE_CONTENT = "<p>This page advertises the gpgAuth headers</p>";
 $PAGE_CONTENT .= "<p>If the extension is installed correctly, you should see the gpgAuth logo in the address bar on the far right.</p>";
@@ -22,14 +22,14 @@ $PAGE_CONTENT .= "<p>If you have the signed the key associated with this domain,
 
 
 // Database Variables
-$dbHost = "AVALIDHOST";
-$dbUser = "AVALIDUSER";
-$dbPass = "AVALIDPASS";
-$dbDatabase = "AVALIDDB";
+$dbHost = "127.0.0.1";
+$dbUser = "root";
+$dbPass = "r00t";
+$dbDatabase = "gpgauth";
 
 // This should point to a path accessible by the user the web instance is
 // running under. (www-data in this example)
-putenv('GNUPGHOME=/var/www/gpgauth.org/.gnupg');
+putenv('GNUPGHOME=/home/kyle/526/php/.gnupg');
 
 // create new GnuPG object
 $gpg = new gnupg();
@@ -37,7 +37,7 @@ $gpg = new gnupg();
 $gpg->seterrormode(gnupg::ERROR_EXCEPTION); 
 
 // If the user does not have a validated session, begin processing
-if(!session_is_registered($_SESSION['keyid'])){
+if(!isset($_SESSION['keyid']) || !session_is_registered($_SESSION['keyid'])){
 	header('X-GPGAuth-Progress: stage0');
 	header('X-GPGAuth-Authenticated: false');
 	
@@ -60,7 +60,7 @@ if(!session_is_registered($_SESSION['keyid'])){
 	header('X-GPGAuth-Requested: ' . $request_gpgauth);
 	
 	// The user has requested the server to verify itself
-	if ($_POST['gpg_auth:server_verify_token']) {
+	if (isset($_POST['gpg_auth:server_verify_token'])) {
 		$CURRENT_PAGE = "Server Verification Test";
 
 		// specify the recipient to force decryption with a given key
@@ -77,8 +77,8 @@ if(!session_is_registered($_SESSION['keyid'])){
 		  header('X-GPGAuth-Error: true');
 		  header('X-GPGAuth-Verify-Response: ' . $e->getMessage());
 		}
-	} elseif ($_POST['gpg_auth:keyid']) {
-		if (!$_POST['gpg_auth:user_token_result']) {
+	} elseif (isset($_POST['gpg_auth:keyid'])) {
+		if (!isset($_POST['gpg_auth:user_token_result'])) {
 			header('X-GPGAuth-Progress: stage1');
 			$keyid = $_POST['gpg_auth:keyid'];
 
@@ -105,7 +105,7 @@ if(!session_is_registered($_SESSION['keyid'])){
 			// attempt to encrypt it to the user, or return any failure.
 			try {
 			  $gpg->addencryptkey($recipient);
-	  		  $gpg->addsignkey('FULL KEY FINGERPRINT','passphrase, if there is one')
+	  		  $gpg->addsignkey('7C4EAF6646340A8958730B4F286868704FBA0718');
 			  $ciphertext = $gpg->encryptsign($plaintext);
 			  $server_response = $token;
 			  // This header holds the encrypted token that is passed to the client
@@ -119,6 +119,12 @@ if(!session_is_registered($_SESSION['keyid'])){
 			  When the client returns the decrypted token, we will test it for a match against
 			  this database field.
 			*/
+
+			# start of sqlite implementation.
+			#$db = sqlite_open("users.db") or die ("Error opening sqlite database.");
+			#sqlite_query($db, "UPDATE users SET user_token = '$plaintext' WHERE INSTR(fingerprint, '$keyid')");
+			#sqlite_close($db);
+
 			$db = mysql_connect("$dbHost", "$dbUser", "$dbPass") or die ("Error connecting to database."); 
 			mysql_select_db("$dbDatabase", $db) or die ("Unable to select the database.");
 			mysql_query("UPDATE users SET user_token = '$plaintext' WHERE INSTR(fingerprint, '$keyid')");
@@ -144,7 +150,7 @@ if(!session_is_registered($_SESSION['keyid'])){
 				header('X-GPGAuth-Authenticated: true');
 				// This is an optional header value which will redirect the user to
 				// the specified page.
-				header('X-GPGAuth-Refer: /tests/php/index.php');
+				header('X-GPGAuth-Refer: /index.php');
 				session_start();
 				// Register the session
 				session_register($keyid);
@@ -162,7 +168,7 @@ if(!session_is_registered($_SESSION['keyid'])){
 	// The user already has a registered session
 	header('X-GPGAuth-Authenticated: true');
 	$CURRENT_PAGE = "Server Verification Test Completed";
-	$PAGE_CONTENT = "You are currently logged in; Click here to <a href=\"/tests/php/index.php?logout\">logout</a><br/>";
+	$PAGE_CONTENT = "You are currently logged in; Click here to <a href=\"/index.php?logout\">logout</a><br/>";
 	// if the "logout" parameter is detected in the query-string, we should do that.
 	foreach ( $_GET as $key => $value ) {
 		if ($key == "logout") {
@@ -172,16 +178,16 @@ if(!session_is_registered($_SESSION['keyid'])){
 			session_unset();
 			session_destroy();
 			$CURRENT_PAGE = "Server Logout Complete";
-			$PAGE_CONTENT =  "You have been successfully logged out; if you would like to log back in, <a href=\"/tests/php/index.php?login\">click here</a>";
+			$PAGE_CONTENT =  "You have been successfully logged out; if you would like to log back in, <a href=\"/index.php?login\">click here</a>";
 		}
 	}
 }
 ?>
 <html>
 <head>
-<title><? echo $CURRENT_PAGE ?></title>
+<title><?php echo $CURRENT_PAGE ?></title>
 </head>
 <body>
-<p><? echo $PAGE_CONTENT ?></p>
+<p><?php echo $PAGE_CONTENT ?></p>
 </body>
 </html>
