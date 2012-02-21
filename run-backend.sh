@@ -1,10 +1,19 @@
 #!/bin/bash
 
+error_msg () {
+	echo "Must specify one backend to run, one of"
+
+	echo -ne "$ ${0} <"
+	echo -ne "\e[1;36m--perl\e[0m|"
+	echo -ne "\e[1;31m--ruby\e[0m|"
+	echo -ne "\e[1;35m--php\e[0m"
+	echo ">"
+
+	exit
+}
 
 if [ $# -ne 1 ]; then
-	echo "Must specify one backend to run, one of"
-	echo "  ${0} <--perl|--ruby|--php>"
-	exit
+	error_msg
 fi
 
 if [ "$1" == "--perl" ]; then
@@ -27,7 +36,7 @@ elif [ "$1" == "--ruby" ]; then
 	rails server
 	popd
 else
-	echo "Must specify one backend to run, one of"
-	echo "  ${0} <--perl|--ruby|--php>"
-	exit
+	error_msg
 fi
+
+
