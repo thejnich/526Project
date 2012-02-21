@@ -107,7 +107,7 @@ if(!isset($_SESSION['keyid']) || !session_is_registered($_SESSION['keyid'])){
 			  $gpg->addencryptkey($recipient);
 	  		  $gpg->addsignkey('7C4EAF6646340A8958730B4F286868704FBA0718');
 			  $ciphertext = $gpg->encryptsign($plaintext);
-			  $server_response = $token;
+			  // $server_response = $token;
 			  // This header holds the encrypted token that is passed to the client
 			  header('X-GPGAuth-User-Auth-Token: ' . quotemeta(urlencode($ciphertext)));
 			} catch (Exception $e) {
