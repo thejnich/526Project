@@ -14,7 +14,7 @@ status_update.pdf:
 	pdflatex status_update.tex
 	bibtex status_update
 	pdflatex status_update.tex
-	pdflatex statux_update.tex
+	pdflatex status_update.tex
 
 # This is ugly, rm -rf proposal.{aux,bbl,blg,...} doesn't work though
 clean:
