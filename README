@@ -62,14 +62,42 @@ DEPENDENCIES
 
 ./run-backend --php
 
-Gentoo: php, lighttpd, pecl-gnupg
-Debian: php5-cgi, lighttpd, php-crypt-gpg
+Gentoo: 
+	- php w/ mysql ./configure option
+	- lighttpd w/ fastcgi ./configure option
+	- pecl-gnupg
+
+Debian: 
+	- php5-cgi
+	- lighttpd
+	- php-crypt-gpg
+	- php5-mysql
+
 
 
 ./run-backend --perl
 
-Gentoo: perl, lighttpd, libwww-perl, Crypt-OpenPGP, CGI, CGI-Session, FCGI, Math-Random-Secure, Digest-MD5
-Debian: perl, lighttpd, libwww-perl, libcgi-session-perl, libfcgi-perl, libmath-random-perl, 
+Gentoo: 
+	- perl
+	- lighttpd w/ fastcgi ./configure option
+	- libwww-perl
+	- Crypt-OpenPGP
+	- CGI
+	- CGI-Session
+	- FCGI
+	- Math-Random-Secure
+	- Digest-MD5
+	- DBD-SQLite
+
+Debian: 
+	- perl
+	- lighttpd
+	- libwww-perl
+	- libcgi-session-perl
+	- libfcgi-perl
+	- libmath-random-perl
+	- libdbd-sqlite3-perl
+
 
 
 ./run-backend --ruby
