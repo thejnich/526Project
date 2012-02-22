@@ -1,6 +1,6 @@
 
 use warnings;
-#use strict;
+use strict;
 
 use CGI::Fast;
 use CGI;
@@ -20,10 +20,27 @@ if (!$pgp) {
 	die 'Cannot allocate pgp object';
 }
 
-$COUNTER = 0;
+while (my $q = new CGI::Fast) {
 
-while ($q = new CGI::Fast) {
+	warn("\npost parameters passed in were: \n");
+	my %params = $q->Vars;
+	foreach my $f (keys (%params)) {
+		warn(" $f:$params{$f}\n");
+	}
 
+	warn("\nkeywords passed in were:\n");
+	my @keywords = $q->keywords;
+	foreach my $k (@keywords) {
+		warn(" $k\n");
+	}
+
+	warn("\nurl parameters passed in were:\n");
+	my @url_params = $q->url_param('keywords');
+	foreach my $k (@url_params) {
+		warn(" $k\n");
+	}
+
+	$q->header(-XASD => 'asdf');
 	print "X-GPGAuth-Version: 1.3.0\r\n";
 	#print "X-GPGAuth-Requested: false\r\n";
 	print "X-GPGAuth-Verify-URL: /index.pl?server_verify\r\n";
@@ -31,32 +48,35 @@ while ($q = new CGI::Fast) {
 	print "X-GPGAuth-Logout-URL: /index.pl?logout\r\n";
 	print "X-GPGAuth-Pubkey-URL: /localhost.pub\r\n";
 
-	$sid = $q->cookie('key_id') || $q->param('key_id') || undef;
-	$session = new CGI::Session(undef, $sid, {Directory=>File::Spec->tmpdir});
+	my $sid = $q->cookie('keyid') || $q->param('keyid') || undef;
+
+	CGI::Session->name('keyid');
+	my $session = new CGI::Session(undef, $sid, {Directory=>File::Spec->tmpdir});
+	$session->expire("+1m");
 
 	if (!$sid) {
-		$session->name('key_id');
-		$session->expire("60");
 
 		print "X-GPGAuth-Progress: stage0\r\n";
 		print "X-GPGAuth-Authenticated: false\r\n";
 
-		$request_gpgauth = 'false';
-		if ($q->param('protected_content') || $q->param('login')) {
-			$request_gpgauth = 'true';
-		}
+		my $request_gpgauth = 'false';
 
+		my @url_params = $q->url_param('keywords');
+		foreach my $k (@url_params) {
+			if ($k eq 'login') {
+				$request_gpgauth = 'true';
+			} 
+			if ($k eq 'protected_content') {
+				$request_gpgauth = 'true';
+			}
+		}
+		
 		print "X-GPGAuth-Requested: $request_gpgauth\r\n";
 
 		if ($q->param('gpg_auth:server_verify_token')) {
-			$ciphertext = $q->param('gpg_auth:server_verify_token');
-
-			eval {
-				$plaintext = $pgp->decrypt(Data => $ciphertext, Passphrase => 'gpg') or die "Decyption Failed: " . $pgp->errstr;
-			};
-			if ($@) {
-				print $@->getErrorMessage();  
-			}
+			my $ciphertext = $q->param('gpg_auth:server_verify_token');
+			my $plaintext = $pgp->decrypt(Data => $ciphertext, Passphrase => 'gpg') 
+				or die "Decyption Failed: " . $pgp->errstr;
 		}
 
 
@@ -68,10 +88,6 @@ while ($q = new CGI::Fast) {
 	print $q->header;
 
 	print $q->start_html("Fast CGI Rocks");
-	print $q->h1("Fast CGI Rocks"),
-		"Invocation number ",b($COUNTER++),
-		" PID ",b($$),".";
-
 	print $q->end_html;
 	$session->flush();
 
