@@ -14,7 +14,7 @@ print FILE $sec->save;
 close FILE;
 
 open FILE, ">localhost.pub" or die $!;
-print FILE Crypt::OpenPGP::Armour->armour(Data => $pub->save, Object => "PUBLIC KEY BLOCK");
+#print FILE Crypt::OpenPGP::Armour->armour(Data => $pub->save, Object => "PUBLIC KEY BLOCK");
+print FILE $pub->save_armoured;
 close FILE;
-
 
