@@ -23,6 +23,60 @@
                      :   : :   : :  :      :      :   : :  
  
 
+
+BACK END
+--------
+
+To run a gpg auth web server, pick one of
+
+	./run-backend <--perl|--ruby|--php>
+
+
+FRONT END
+---------
+
+The front end for gpgauth can be any browser extension that implements the gpg
+auth protocol. See http://gpgauth.org/ for more details about the protocol.
+
+Browser extensions that have recent gpgauth implementations:
+
+gpgAuth-chrome (chromium only)
+	- https://chrome.google.com/webstore/detail/pinhikmcljjkhnpjmpfkhjgiaacajajm
+	- most recent version of gpgauth protocol, 1.3.0
+	- uses gpgAuth-npapi plugin, which is browser independent
+	- only plugin that works for right now
+
+
+Browser extensions that have legacy gpgauth implementations:
+
+firegpg (firefox only):
+	- officially discontinued, 0.8.0 doesn't work with my firefox 10 browser
+	- fork available on github, revbumped to 0.8.5 and works on ff 10
+	  $ git clone https://github.com/firegpg/firegpg.git
+	- I had to build the extension myself, as there are only precompiled
+	  binaries for v0.8.0 which probably wont work for you
+
+
+DEPENDENCIES
+------------
+
+./run-backend --php
+
+Gentoo: php, lighttpd, pecl-gnupg
+Debian: php5-cgi, lighttpd, php-crypt-gpg
+
+
+./run-backend --perl
+
+Gentoo: perl, lighttpd, libwww-perl, Crypt-OpenPGP, CGI, CGI-Session, FCGI
+Debian: perl, lighttpd, libwww-perl, libcgi-session-perl, libfcgi-perl
+
+
+./run-backend --ruby
+
+This requires the ruby application rails.
+
+
 USEFULNESS
 ----------
 
@@ -47,58 +101,4 @@ Some places that this scheme could be used (aka could use a backend):
 	- lwn.net
 	- royalbank.ca
 	- airuc web auth
-
-
-BACK END
---------
-
-To run a gpg auth web server, pick one of
-
-	./run-backend <--perl|--ruby|--php>
-
-
-FRONT END
----------
-
-The front end for gpgauth can be any browser extension that implements the gpg
-auth protocol. See http://gpgauth.org/ for more details about the protocol.
-
-List of browser extensions that already have gpgauth implementations:
-
-firegpg (firefox only):
-	- officially discontinued, 0.8.0 doesn't work with my firefox 10 browser
-	- fork available on github, revbumped to 0.8.5 and works on ff 10
-	  $ git clone https://github.com/firegpg/firegpg.git
-	- I had to build the extension myself, as there are only precompiled
-	  binaries for v0.8.0 which probably wont work for you
-  
-gpgAuth-chrome (chromium only)
-	- https://chrome.google.com/webstore/detail/pinhikmcljjkhnpjmpfkhjgiaacajajm
-	- haven't tried it out yet
-
-gpgAuth-npapi
-	- cross browser solution so one plugin works across all np-api based browsers
-	- http://gpgauth.org/projects/gpgauth-npapi/
-	- uses another plugin to get browser-independent implementation (firebreath)
-	  < kind of crappy that this brings in yet another dependency >
-
-
-DEPENDENCIES
-------------
-
-./run-backend --php
-
-Gentoo: php, lighttpd, pecl-gnupg
-Debian: php5-cgi, lighttpd, php-crypt-gpg
-
-
-./run-backend --perl
-
-Gentoo: perl, lighttpd, libwww-perl, Crypt-OpenPGP, CGI, CGI-Session, FCGI
-Debian: perl, lighttpd, libwww-perl, libcgi-session-perl, libfcgi-perl
-
-
-./run-backend --ruby
-
-This requires the ruby application rails.
 
