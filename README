@@ -89,7 +89,8 @@ DEPENDENCIES
 ./run-backend --php
 
 This requires lighttpd and its fast_cgi module to be installed, along with the 
-pecl-gnupg (Gentoo package name) gnupg perl extension.
+pecl-gnupg (Gentoo package name) gnupg perl extension, and the perl CGI, FCGI, and 
+CGI-Session modules.
 
 
 ./run-backend --perl
