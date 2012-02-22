@@ -20,13 +20,13 @@ if [ "$1" == "--perl" ]; then
 	printf "\e[1;36m"
 	printf "launching lighttpd perl backend\n"
 	printf "\e[0m"
-	printf " -> the server can be accessed via 127.0.0.1:8080 in a web browser\n"
+	printf " -> the server can be accessed via localhost:8080 in a web browser\n"
 	lighttpd -f conf/perl/lighttpd.conf -D
 elif [ "$1" == "--php" ]; then
 	printf "\e[1;35m"
 	printf "launching lighttpd php backend\n"
 	printf "\e[0m"
-	printf " -> the server can be accessed via 127.0.0.1:8080 in a web browser\n"
+	printf " -> the server can be accessed via localhost:8080 in a web browser\n"
 	lighttpd -f conf/php/lighttpd.conf -D
 elif [ "$1" == "--ruby" ]; then
 	printf "\e[1;31m"
