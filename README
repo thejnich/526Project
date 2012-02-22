@@ -88,20 +88,17 @@ DEPENDENCIES
 
 ./run-backend --php
 
-This requires lighttpd and its fast_cgi module to be installed, along with the 
-pecl-gnupg (Gentoo package name) gnupg perl extension, and the perl CGI, FCGI, and 
-CGI-Session modules.
+Gentoo: php, lighttpd, pecl-gnupg
+Debian: php5-cgi, lighttpd, php-crypt-gpg
 
 
 ./run-backend --perl
 
-This requires lighttpd and its cgi modules to be installed, along with the 
-libwww-perl, HTTP-Message, Crypt-OpenPGP perl libraries. Note than the names may 
-be different on different distributions (yay) these are for Gentoo.
+Gentoo: perl, lighttpd, libwww-perl, Crypt-OpenPGP, CGI, CGI-Session, FCGI
+Debian: perl, lighttpd, libwww-perl, libcgi-session-perl, libfcgi-perl
 
 
 ./run-backend --ruby
 
 This requires the ruby application rails.
-
 
