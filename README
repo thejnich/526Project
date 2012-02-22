@@ -68,8 +68,8 @@ Debian: php5-cgi, lighttpd, php-crypt-gpg
 
 ./run-backend --perl
 
-Gentoo: perl, lighttpd, libwww-perl, Crypt-OpenPGP, CGI, CGI-Session, FCGI
-Debian: perl, lighttpd, libwww-perl, libcgi-session-perl, libfcgi-perl
+Gentoo: perl, lighttpd, libwww-perl, Crypt-OpenPGP, CGI, CGI-Session, FCGI, Math-Random-Secure, Digest-MD5
+Debian: perl, lighttpd, libwww-perl, libcgi-session-perl, libfcgi-perl, libmath-random-perl, 
 
 
 ./run-backend --ruby
