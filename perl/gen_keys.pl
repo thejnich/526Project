@@ -7,7 +7,9 @@ require Crypt::OpenPGP;
 require Crypt::OpenPGP::Armour;
 
 
-($pub, $sec) = Crypt::OpenPGP->keygen(Type =>'RSA', Size => '2048', Identity => 'localhost', Passphrase => 'gpg');
+($pub, $sec) = Crypt::OpenPGP->keygen(Type =>'RSA', Size => '1024', Identity => 'localhost', Passphrase => 'gpg');
+
+print 'secret key id: ' . $sec->signing_key->key_id_hex;
 
 open FILE, ">localhost.sec" or die $!;
 print FILE $sec->save;

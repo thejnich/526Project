@@ -18,7 +18,15 @@ use Digest::MD5 qw(md5 md5_hex md5_base64);
 use URI::Escape;
 
 
-my $pgp = Crypt::OpenPGP->new( KeyServer => 'pool.sks-keyservers.net', AutoKeyRetrieve => 1, SecRing => 'localhost.sec', PubRing => 'localhost.pub');
+my $pgp = Crypt::OpenPGP->new( KeyServer => 'pool.sks-keyservers.net', AutoKeyRetrieve => 1, 
+	SecRing => Crypt::OpenPGP::KeyRing->new(Filename => '/home/kyle/526/perl/localhost.sec'), 
+	PubRing => Crypt::OpenPGP::KeyRing->new(Filename => '/home/kyle/526/perl/localhost.pub'));
+
+if ($pgp->errstr) {
+	warn($pgp->errstr);
+}
+
+#($pub, $sec) = Crypt::OpenPGP->keygen(Type =>'RSA', Size => '1024', Identity => 'localhost', Passphrase => 'gpg');
 
 if (!$pgp) {
 	die 'Cannot allocate pgp object';
@@ -108,12 +116,11 @@ while (my $q = new CGI::Fast) {
 				my $plaintext = 'gpgauthv1.3.0|' . length($nonce) . '|' . $nonce . '|gpgauthv1.3.0';
 
 				eval {
-					my $encrypted_data = $pgp->encrypt(Recipients => $keyid, Data => $plaintext);
-					my $ciphertext = $pgp->sign(Data => $encrypted_data, Armour => 1, KeyID => '4c643f9e268c4b86', Passphrase => 'gpg');
-					warn($pgp->errstr . '\n');
+					my $ciphertext = $pgp->encrypt(Recipients => $keyid, Data => $plaintext, 
+						SignKeyID => '0ADB17D1CAAA4963', SignPassphrase => 'gpg', Armour => 1);
 					$gpg_headers->header(X_GPGAuth_User_Auth_Token => quotemeta(uri_escape($ciphertext)) );
 				};
-				if ($@) {
+				if ($pgp->errstr) {
 					$gpg_headers->header(X_GPGAuth_Error => 'true');
 					$gpg_headers->header(X_GPGAuth_User_Auth_Token => $pgp->errstr);
 
