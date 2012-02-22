@@ -22,6 +22,11 @@
 \tableofcontents
 \pagebreak
 
+\section{Project Progress}
+In working towards our goal of implementing a public-key based authorization system for web domains, we have come across some useful projects done by others, some of which have somewhat working implementations.  Although we will be using code from these projects (gpgauth\cite{gpgauth}), none are implemented with the same specifications that we've decided on, so some further tweaking must is necessary.  For example, gpgAuth uses a server-side database to store public keys of registered users, whereas we'd like our implementation to query a public key server given the user's email address, to alleviate the need for a cumbersome database which must be maintained, protected and kept up-to-date.\\
+	At the moment our group is in the process of setting up dependencies and configurations in order to get the different pieces of our implementation working together.  We have 3 different server implementations running at the moment, running on perl, ruby and php.  The php version is forked from the gpgAuth project, and works in conjunction with the gpgAuth Chrome browser extension.  Though we've got these tools working, we are still in the process of learning how they work so that we can change the implementation to fit our specifications.  The ruby implementation is running on top of the rails framework and is currently able to query the ubuntu keyserver and retrieve a public key given a valid e-mail address.  The perl implementation is running and can detect a user's input.\\
+	The next steps are to eliminate the need for a server-side database in the php implementation by connection gpgAuth to a key-server query tool.  When we're able to do this, we can move on to porting the php implementation to perl and ruby, time allowing.  In the unlikely case that this gets done in time, we will proceed to documenting the most useful application scenarios and possible future enhancements.
+
 \section{Related Works}
 Pwdhash \cite{pwdhash}:
 Pwdhash uses a pair of pieces of information (password, domain-name) that is hashed by a publicly available hash function which can be computed on any computer. The hash is then sent as the password to the website.\\
