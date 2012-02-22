@@ -40,13 +40,20 @@ while (my $q = new CGI::Fast) {
 		warn(" $k\n");
 	}
 
-	$q->header(-XASD => 'asdf');
-	print "X-GPGAuth-Version: 1.3.0\r\n";
-	#print "X-GPGAuth-Requested: false\r\n";
-	print "X-GPGAuth-Verify-URL: /index.pl?server_verify\r\n";
-	print "X-GPGAuth-Login-URL: /index.pl?login\r\n";
-	print "X-GPGAuth-Logout-URL: /index.pl?logout\r\n";
-	print "X-GPGAuth-Pubkey-URL: /localhost.pub\r\n";
+	#my %headers = map { $_ => $q->http($_) } $q->http();
+	#my $headerDump = "\nGot the following headers:\n";
+	#for my $header ( keys %headers ) {
+	#	$headerDump = $headerDump . "$header: $headers{$header}\n";
+	#}
+	#warn($headerDump);
+
+	my $gpg_headers = HTTP::Headers->new;
+	$gpg_headers->header(-X_GPGAuth_Version => '1.3.0');
+	$gpg_headers->header(-X_GPGAuth_Requested => 'false');
+	$gpg_headers->header(-X_GPGAuth_Verify_URL => '/index.pl?server_verify');
+	$gpg_headers->header(-X_GPGAuth_Login_URL => '/index.pl?login');
+	$gpg_headers->header(-X_GPGAuth_Logout_URL => '/index.pl?logout');
+	$gpg_headers->header(-X_GPGAuth_Pubkey_URL => '/localhost.pub');
 
 	my $sid = $q->cookie('keyid') || $q->param('keyid') || undef;
 
@@ -56,11 +63,10 @@ while (my $q = new CGI::Fast) {
 
 	if (!$sid) {
 
-		print "X-GPGAuth-Progress: stage0\r\n";
-		print "X-GPGAuth-Authenticated: false\r\n";
+		$gpg_headers->header(-X_GPGAuth_Progress => 'stage0');
+		$gpg_headers->header(-X_GPGAuth_Authenticated => 'false');
 
 		my $request_gpgauth = 'false';
-
 		my @url_params = $q->url_param('keywords');
 		foreach my $k (@url_params) {
 			if ($k eq 'login') {
@@ -70,24 +76,38 @@ while (my $q = new CGI::Fast) {
 				$request_gpgauth = 'true';
 			}
 		}
-		
-		print "X-GPGAuth-Requested: $request_gpgauth\r\n";
+
+		$gpg_headers->header(-X_GPGAuth_Requested => $request_gpgauth);
 
 		if ($q->param('gpg_auth:server_verify_token')) {
 			my $ciphertext = $q->param('gpg_auth:server_verify_token');
-			my $plaintext = $pgp->decrypt(Data => $ciphertext, Passphrase => 'gpg') 
-				or die "Decyption Failed: " . $pgp->errstr;
+
+			eval {
+				my $plaintext = $pgp->decrypt(Data => $ciphertext, Passphrase => 'gpg');
+				# need to set server reponse to plaintext here too?
+				$gpg_headers->header(-X_GPGAuth_Verify_Response => $plaintext);
+			};
+			if ($@) {
+				$gpg_headers->header(-X_GPGAuth_Error => 'true');
+				$gpg_headers->header(-X_GPGAuth_Verify_Response => $pgp->errstr);
+			}
+
+		}
+		elsif ($q->param('gpg_auth:keyid')) {
+			if (!$q->param('gpg_auth:user_token_result')) {
+				$gpg_headers->header(-X_GPGAuth_Progress => 'stage1');
+			}
 		}
 
+	} 
+	else {
+	}
 
-	 } 
-	 else {
-
-	 }
-
+	print $gpg_headers->as_string;
 	print $q->header;
 
 	print $q->start_html("Fast CGI Rocks");
+	print $q->h1("Welcome to the Perl gpgauth backend.");
 	print $q->end_html;
 	$session->flush();
 
