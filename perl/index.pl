@@ -17,6 +17,11 @@ use Digest::MD5 qw(md5 md5_hex md5_base64);
 
 use URI::Escape;
 
+use DBI;
+
+my $db = DBI->connect("dbi:SQLite:dbname=/home/kyle/526/perl/users.db","","");
+$db->do('CREATE TABLE users (id INTEGER PRIMARY KEY, username TEXT, user_token TEXT, keyid TEXT); ');
+
 
 my $pgp = Crypt::OpenPGP->new( KeyServer => 'pool.sks-keyservers.net', AutoKeyRetrieve => 1, 
 	SecRing => Crypt::OpenPGP::KeyRing->new(Filename => '/home/kyle/526/perl/localhost.sec'), 
@@ -125,6 +130,8 @@ while (my $q = new CGI::Fast) {
 					$gpg_headers->header(X_GPGAuth_User_Auth_Token => $pgp->errstr);
 
 				}
+
+				$db->do("INSERT INTO users VALUES (NULL, NULL, '$plaintext', '$keyid');");
 			}
 		}
 
@@ -135,10 +142,12 @@ while (my $q = new CGI::Fast) {
 	print $gpg_headers->as_string;
 	print $q->header;
 
-	print $q->start_html("Fast CGI Rocks");
+	print $q->start_html("Perl GPGAuth Backend");
 	print $q->h1("Welcome to the Perl gpgauth backend.");
 	print $q->end_html;
 	$session->flush();
 
 }
+
+db->disconnect();
 
