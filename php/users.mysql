@@ -1,3 +1,5 @@
+
+
 CREATE DATABASE gpgauth
 ;
 USE gpgauth
@@ -7,3 +9,6 @@ username VARCHAR(1000),
 user_token VARCHAR(1000),
 fingerprint VARCHAR(10000)
 );
+
+insert into users (fingerprint, username) values ("D18AA50466ECCEA92BE0BFBD09EAE94CBF7DABCA", "Kyle Milz");
+
