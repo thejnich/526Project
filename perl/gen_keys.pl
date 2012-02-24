@@ -1,13 +1,13 @@
 #!/usr/bin/env perl
 
 use warnings;
-#use strict;
+use strict;
 
 require Crypt::OpenPGP;
 require Crypt::OpenPGP::Armour;
 
-
-($pub, $sec) = Crypt::OpenPGP->keygen(Type =>'RSA', Size => '1024', Identity => 'localhost', Passphrase => 'gpg');
+my $pgp  = Crypt::OpenPGP->new(Compat => 'GnuPG');
+my($pub, $sec) = $pgp->keygen(Type =>'RSA', Size => '2048', Identity => 'Perl Backend <localhost>', Passphrase => 'gpg');
 
 print 'secret key id: ' . $sec->signing_key->key_id_hex;
 
