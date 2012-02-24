@@ -29,7 +29,7 @@ BACK END
 
 To run a gpg auth web server, pick one of
 
-	./run-backend <--perl|--ruby|--php>
+	./run-backend <--perl|--ruby|--php|--python>
 
 
 FRONT END
@@ -103,6 +103,14 @@ Debian:
 ./run-backend --ruby
 
 This requires the ruby application rails.
+
+
+
+./run-backend --python
+
+Gentoo:
+	- py-gnupg
+	- flup
 
 
 USEFULNESS
