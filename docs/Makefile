@@ -2,7 +2,11 @@
 # That's right, pdflatex has to be run 3 times.
 #
 
-all: proposal.pdf status_update.pdf
+all: proposal update
+
+proposal: proposal.pdf
+
+update: status_update.pdf
 
 proposal.pdf: proposal.tex refs.bib
 	pdflatex proposal.tex        # first pass
@@ -10,7 +14,7 @@ proposal.pdf: proposal.tex refs.bib
 	pdflatex proposal.tex        # matches citations/references
 	pdflatex proposal.tex        # finishes all cross referencing
 
-status_update.pdf:
+status_update.pdf: status_update.tex refs.bib
 	pdflatex status_update.tex
 	bibtex status_update
 	pdflatex status_update.tex
