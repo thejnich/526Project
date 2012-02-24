@@ -1,2 +1,2 @@
 
-compctl -k "(--perl --php --ruby)" run-backend.sh
+compctl -k "(--perl --php --ruby --python)" run-backend.sh
