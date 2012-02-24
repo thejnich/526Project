@@ -1,2 +1,11 @@
 random_seed
 access.log
+*.swp
+docs/*.aux
+docs/*.bbl
+docs/*.log
+docs/*.blg
+docs/*.out
+docs/*.toc
+docs/*.pdf
+
