@@ -4,6 +4,9 @@
 
 all: proposal update
 
+open: update
+	open status_update.pdf
+
 proposal: proposal.pdf
 
 update: status_update.pdf
