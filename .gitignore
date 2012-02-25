@@ -8,4 +8,5 @@ docs/*.blg
 docs/*.out
 docs/*.toc
 docs/*.pdf
-
+*.db
+*.my
