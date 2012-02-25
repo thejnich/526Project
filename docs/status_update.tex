@@ -64,9 +64,10 @@ GpgAuth\cite{gpgauth} is an authentication mechanism which uses Public/Private (
 	This project is very similar to our implementation, and parts of the actual implementation will be used by us.
 
 \section{Moving Forward} \label{sec:future}
-The next steps are to reduce the dependency on a server-side database in the php implementation by connecting gpgAuth to a key-server query tool.  When we're able to do this, we can move on to porting the php implementation to perl and ruby, time allowing.  
+The next steps are to reduce the dependency on a server-side database in the php implementation by connecting gpgAuth to a key-server query tool.  When we're able to do this, we can move on to porting the php implementation to other languages.\\
+Once we have a working back-end, we need to refine it. The dependencies need to be reduced as much as possible. Also, we need to make sure that everything is as user friendly as possible. It has taken us quite some work to get the basic mechanisms working. The set up and dependencies are different depending on what platform you are running. For the average user, this would be an insurmountable obstacle in the adoption of our authentication system.\\
+We need to improve the browser extension, so that it is simple to set everything up on the clients system. The more that can be automated the better. Also we will investigate porting the extension to different browsers, and ensuring that the extension works with all versions of the server side implementation.
 
-\subsection{PHP} \label{subsec:php}
 \bibliographystyle{plain}
 \bibliography{refs}{}
 \addcontentsline{toc}{section}{References}
