@@ -11,5 +11,5 @@ fingerprint VARCHAR(10000)
 );
 
 insert into users (fingerprint, username) values ("D18AA50466ECCEA92BE0BFBD09EAE94CBF7DABCA", "Kyle Milz");
-
+insert into users (fingerprint, username) values ("40481ED3FDE6EE61E66DACC4333D31D8EB6B971F", "Jeff Nicholson");
 insert into users (fingerprint, username) values ("B1C40921E278370118703BF7A7E4BBE616885522", "masudtest");
