@@ -1,5 +1,6 @@
 <?php
 //start the session 
+session_save_path('/tmp');
 session_start();
 header('X-GPGAuth-Version: 1.3.0');
 header('X-GPGAuth-Requested: false');
@@ -29,7 +30,7 @@ $dbDatabase = "gpgauth";
 
 // This should point to a path accessible by the user the web instance is
 // running under. (www-data in this example)
-putenv('GNUPGHOME=/home/kyle/526/php/.gnupg');
+putenv('GNUPGHOME=/home/development/cpsc526/526Project/php/.gnupg');
 
 // create new GnuPG object
 $gpg = new gnupg();
