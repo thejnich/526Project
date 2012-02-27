@@ -19,7 +19,7 @@ use URI::Escape;
 
 use DBI;
 
-my $db = DBI->connect("dbi:SQLite:dbname=/home/kyle/526/perl/users.db","","");
+my $db = DBI->connect("dbi:SQLite:dbname=$ENV{'BASEDIR'}/users.db","","");
 $db->do('CREATE TABLE users (id INTEGER PRIMARY KEY, username TEXT, user_token TEXT, keyid TEXT); ');
 
 #warn("\nenvironment parameters passed in were: \n");
