@@ -43,7 +43,7 @@ Browser extensions that have recent gpgauth implementations:
 gpgAuth-chrome (chromium only)
 	- https://chrome.google.com/webstore/detail/pinhikmcljjkhnpjmpfkhjgiaacajajm
 	- most recent version of gpgauth protocol, 1.3.0
-	- uses gpgAuth-npapi plugin, which is browser independent
+	- uses gpgAuth-npapi plugin, which is browser/os independent
 	- only plugin that works for right now
 
 
