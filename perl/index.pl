@@ -22,10 +22,15 @@ use DBI;
 my $db = DBI->connect("dbi:SQLite:dbname=/home/kyle/526/perl/users.db","","");
 $db->do('CREATE TABLE users (id INTEGER PRIMARY KEY, username TEXT, user_token TEXT, keyid TEXT); ');
 
+#warn("\nenvironment parameters passed in were: \n");
+#foreach my $key (sort(keys %ENV)) {
+#    warn "$key = $ENV{$key}\n";
+#}
+
 
 my $pgp = Crypt::OpenPGP->new( Compat => 'GnuPG', KeyServer => 'sks.mit.edu', AutoKeyRetrieve => 1,
-	SecRing => Crypt::OpenPGP::KeyRing->new(Filename => '/home/kyle/526/perl/secring.gpg'), 
-	PubRing => Crypt::OpenPGP::KeyRing->new(Filename => '/home/kyle/526/perl/pubring.gpg'));
+	SecRing => Crypt::OpenPGP::KeyRing->new(Filename => "$ENV{'BASEDIR'}/.gnupg/secring.gpg"), 
+	PubRing => Crypt::OpenPGP::KeyRing->new(Filename => "$ENV{'BASEDIR'}/.gnupg/pubring.gpg"));
 
 if ($pgp->errstr) {
 	warn($pgp->errstr);
