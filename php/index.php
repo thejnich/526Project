@@ -30,7 +30,7 @@ $dbDatabase = "gpgauth";
 
 // This should point to a path accessible by the user the web instance is
 // running under. (www-data in this example)
-putenv('GNUPGHOME=' . getenv('CWD') . '/php/.gnupg');
+putenv('GNUPGHOME=' . getenv('BASEDIR') . '/.gnupg');
 
 // create new GnuPG object
 $gpg = new gnupg();
