@@ -25,12 +25,12 @@ $PAGE_CONTENT .= "<p>If you have the signed the key associated with this domain,
 // Database Variables
 $dbHost = "127.0.0.1";
 $dbUser = "root";
-$dbPass = "r00t";
+$dbPass = "";
 $dbDatabase = "gpgauth";
 
 // This should point to a path accessible by the user the web instance is
 // running under. (www-data in this example)
-putenv('GNUPGHOME=/home/development/cpsc526/526Project/php/.gnupg');
+putenv('GNUPGHOME=' . getenv('BASEDIR') . '/.gnupg');
 
 // create new GnuPG object
 $gpg = new gnupg();
@@ -41,7 +41,7 @@ $gpg->seterrormode(gnupg::ERROR_EXCEPTION);
 if(!isset($_SESSION['keyid']) || !session_is_registered($_SESSION['keyid'])){
 	header('X-GPGAuth-Progress: stage0');
 	header('X-GPGAuth-Authenticated: false');
-	
+
 	// This variable controls the "Auto login" functionality;
 	// by default, this test page will automatically attempt to login
 	// unless the user has landed on the logout page, or if the parameter
@@ -59,7 +59,7 @@ if(!isset($_SESSION['keyid']) || !session_is_registered($_SESSION['keyid'])){
 	}
 	// Set the Auth-Requested header to what we determined above
 	header('X-GPGAuth-Requested: ' . $request_gpgauth);
-	
+
 	// The user has requested the server to verify itself
 	if (isset($_POST['gpg_auth:server_verify_token'])) {
 		$CURRENT_PAGE = "Server Verification Test";
