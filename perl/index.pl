@@ -31,6 +31,34 @@ $gnupg->options->hash_init( armor   => 1,
 						meta_signing_key_id => '59F1E1F177716644');
 
 
+sub sign_and_encrypt
+{
+	$gnupg->options->recipients( [ $_[0] ] );
+	$gnupg->options->always_trust( 1 );
+
+	my ( $input, $output, $error ) = ( IO::Handle->new(), IO::Handle->new(), IO::Handle->new() );
+	my $handles = GnuPG::Handles->new( stdin => $input, stdout => $output, stderr => $error );
+
+	my $pid = $gnupg->sign_and_encrypt( handles => $handles);
+
+	# Now we write to the input of GnuPG
+	print $input $_[1];
+	close $input;
+
+	# now we read the output
+	my @ciphertext = <$output>;
+	my @errortext = <$error>;   # reading the error
+
+	close $output;
+	close $error;
+
+	waitpid $pid, 0;
+
+	return (@ciphertext, @errortext);
+
+}
+
+
 while (my $q = new CGI::Fast) {
 
 	warn("\npost parameters passed in were: \n");
@@ -111,47 +139,34 @@ while (my $q = new CGI::Fast) {
 				$gpg_headers->header(X_GPGAuth_Progress => 'stage1');
 				my $keyid = $q->param('gpg_auth:keyid');
 
-				# add key to local keyring
-				#my ( $input_1, $output_1, $error_1 ) = ( IO::Handle->new(), IO::Handle->new(), IO::Handle->new() );
-				#my $handles_recv_keys = GnuPG::Handles->new( stdin => $input_1, stdout => $output_1, stderr => $error_1);
-
-				#my $pid_recv_keys = $gnupg->wrap_call
-				#( commands     => [ qw( --recv-keys ) ],
-				#	command_args => [ $keyid ],
-				#	handles      => $handles_recv_keys,
-				#);
-
-				#waitpid $pid_recv_keys, 0;
-
-
-				$gnupg->options->recipients( [ $keyid ] );
-				$gnupg->options->always_trust( 1 );
-
 				my $nonce = md5_hex(irand());
 				my @plaintext = ( 'gpgauthv1.3.0|' . length($nonce) . '|' . $nonce . '|gpgauthv1.3.0' );
 
-				my ( $input, $output, $error ) = ( IO::Handle->new(), IO::Handle->new(), IO::Handle->new() );
-				my $handles = GnuPG::Handles->new( stdin => $input, stdout => $output, stderr => $error );
+				my (@ciphertext, @errortext) = sign_and_encrypt($keyid, @plaintext);
 
-				my $pid = $gnupg->sign_and_encrypt( handles => $handles);
+				if ($errortext[0]) {
 
-				# Now we write to the input of GnuPG
-				print $input @plaintext;
-				close $input;
+					warn("trying to recieve public key ...\n");
 
-				# now we read the output
-				my @ciphertext = <$output>;
-				my @error_output = <$error>;   # reading the error
+					# try to add key to local keyring
+					my ( $input_1, $output_1, $error_1 ) = ( IO::Handle->new(), IO::Handle->new(), IO::Handle->new() );
+					my $handles_recv_keys = GnuPG::Handles->new( stdin => $input_1, stdout => $output_1, stderr => $error_1);
 
-				close $output;
-				close $error;
+					my $pid_recv_keys = $gnupg->wrap_call
+					( commands     => [ qw( --recv-keys ) ],
+						command_args => [ $keyid ],
+						handles      => $handles_recv_keys,
+					);
 
-				waitpid $pid, 0;
+					waitpid $pid_recv_keys, 0;
+
+					(@ciphertext, @errortext) = sign_and_encrypt($keyid, @plaintext);
+				}
 
 
-				if ($error_output[0]) {
+				if (@errortext) {
 					$gpg_headers->header(X_GPGAuth_Error => 'true');
-					$gpg_headers->header(X_GPGAuth_User_Auth_Token => $error_output[0]);
+					$gpg_headers->header(X_GPGAuth_User_Auth_Token => join('', @errortext));
 				}
 				else {
 					warn(@ciphertext);
