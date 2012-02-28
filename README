@@ -81,13 +81,13 @@ Gentoo:
 	- perl
 	- lighttpd w/ fastcgi ./configure option
 	- libwww-perl
-	- Crypt-OpenPGP
 	- CGI
 	- CGI-Session
 	- FCGI
 	- Math-Random-Secure
 	- Digest-MD5
 	- DBD-SQLite
+	- GnuPG-Interface
 
 Debian: 
 	- perl
@@ -97,6 +97,7 @@ Debian:
 	- libfcgi-perl
 	- libmath-random-perl
 	- libdbd-sqlite3-perl
+	- libgnupg-interface-perl
 
 
 
