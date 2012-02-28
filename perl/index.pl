@@ -112,16 +112,16 @@ while (my $q = new CGI::Fast) {
 				my $keyid = $q->param('gpg_auth:keyid');
 
 				# add key to local keyring
-				#my ( $input_1, $output_1, $error_1 ) = ( IO::Handle->new(), IO::Handle->new(), IO::Handle->new() );
-				#my $handles_recv_keys = GnuPG::Handles->new( stdin => $input_1, stdout => $output_1, stderr => $error_1);
+				my ( $input_1, $output_1, $error_1 ) = ( IO::Handle->new(), IO::Handle->new(), IO::Handle->new() );
+				my $handles_recv_keys = GnuPG::Handles->new( stdin => $input_1, stdout => $output_1, stderr => $error_1);
 
-				#my $pid_recv_keys = $gnupg->wrap_call
-				#( commands     => [ qw( --recv-keys ) ],
-				#	command_args => [ $keyid ],
-				#	handles      => $handles_recv_keys,
-				#);
+				my $pid_recv_keys = $gnupg->wrap_call
+				( commands     => [ qw( --recv-keys ) ],
+					command_args => [ $keyid ],
+					handles      => $handles_recv_keys,
+				);
 
-				#waitpid $pid_recv_keys, 0;
+				waitpid $pid_recv_keys, 0;
 
 
 				$gnupg->options->recipients( [ $keyid ] );
