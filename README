@@ -77,10 +77,19 @@ Debian:
 
 ./run-backend --perl
 
+
+FreeBSD:
+	- security/p5-GnuPG-Interface
+	- www/p5-FCGI
+	- www/p5-CGI-Session
+	- www/p5-HTTP-Message
+	- databases/p5-DBD-SQLite
+	- math/p5-Math-Random-Secure
+
 Gentoo: 
 	- perl
 	- lighttpd w/ fastcgi ./configure option
-	- libwww-perl
+	- HTTP-Message
 	- CGI
 	- CGI-Session
 	- FCGI
