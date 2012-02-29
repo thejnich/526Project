@@ -1,3 +1,5 @@
+#!/usr/bin/env perl
+
 
 use warnings;
 use strict;
@@ -21,12 +23,12 @@ use URI::Escape;
 use DBI;
 
 
-my $db = DBI->connect("dbi:SQLite:dbname=$ENV{'BASEDIR'}/users.db","","");
+my $db = DBI->connect("dbi:SQLite:dbname=$ENV{'DOCUMENT_ROOT'}/users.db","","");
 $db->do('CREATE TABLE users (id INTEGER PRIMARY KEY, username TEXT, user_token TEXT, keyid TEXT); ');
 
 my $gnupg = GnuPG::Interface->new();
 $gnupg->options->hash_init( armor   => 1,
-                            homedir => "$ENV{'BASEDIR'}/.gnupg",
+                            homedir => "$ENV{'DOCUMENT_ROOT'}/.gnupg",
                             always_trust => 1, meta_interactive => 0,
                             meta_signing_key_id => '59F1E1F177716644' );
 
