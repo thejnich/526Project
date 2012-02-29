@@ -28,7 +28,7 @@ my $gnupg = GnuPG::Interface->new();
 $gnupg->options->hash_init( armor   => 1,
                             homedir => "$ENV{'BASEDIR'}/.gnupg",
                             always_trust => 1, meta_interactive => 0,
-						meta_signing_key_id => '59F1E1F177716644');
+                            meta_signing_key_id => '59F1E1F177716644' );
 
 
 while (my $q = new CGI::Fast) {
@@ -66,13 +66,12 @@ while (my $q = new CGI::Fast) {
 	$gpg_headers->header(X_GPGAuth_Logout_URL => '/index.pl?logout');
 	$gpg_headers->header(X_GPGAuth_Pubkey_URL => '/localhost.pub');
 
-	my $sid = $q->cookie('keyid') || $q->param('keyid') || undef;
+	my $sid = $q->cookie('CGISESSID') || undef;
 
-	CGI::Session->name('keyid');
 	my $session = new CGI::Session(undef, $sid, {Directory=>File::Spec->tmpdir});
-	$session->expire("+1m");
+	$session->expire("+30m");
 
-	if (!$sid) {
+	if (!$session->param('keyid')) {
 
 		$gpg_headers->header(X_GPGAuth_Progress => 'stage0');
 		$gpg_headers->header(X_GPGAuth_Authenticated => 'false');
@@ -148,26 +147,17 @@ while (my $q = new CGI::Fast) {
 
 				waitpid $pid, 0;
 
-
 				if ($error_output[0]) {
 					$gpg_headers->header(X_GPGAuth_Error => 'true');
 					$gpg_headers->header(X_GPGAuth_User_Auth_Token => $error_output[0]);
 				}
 				else {
-					warn(@ciphertext);
-					#@ciphertext = uri_escape(@ciphertext);
-
 					foreach my $c (@ciphertext) {
 						#warn(" $c\n");
 						$c = uri_escape($c);
 						$c =~ s/%20/\\+/g;
 						$c =~ s/\./\\./g;
 					}
-
-					#@ciphertext =~ s/%20/\\+/g;
-					#@ciphertext =~ s/\./\\./g;
-					# warn($ciphertext);
-
 					$gpg_headers->header(X_GPGAuth_User_Auth_Token => join('', @ciphertext) );
 					$db->do("INSERT INTO users VALUES (NULL, NULL, '$plaintext[0]', '$keyid');");
 				}
@@ -185,7 +175,10 @@ while (my $q = new CGI::Fast) {
 
 					$gpg_headers->header(X_GPGAuth_Refer => '/index.pl');
 
-					$session->param("keyid", $keyid);
+					my $cookie = $q->cookie(CGISESSID => $session->id);
+					$gpg_headers->header(Set_Cookie => $cookie );
+					$session->param('keyid', $keyid);
+
 				}
 				else {
 					$gpg_headers->header(X_GPGAuth_Authenticated => 'false');
