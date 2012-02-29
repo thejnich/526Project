@@ -33,30 +33,23 @@ $gnupg->options->hash_init( armor   => 1,
 
 while (my $q = new CGI::Fast) {
 
-	warn("\npost parameters passed in were: \n");
-	my %params = $q->Vars;
-	foreach my $f (keys (%params)) {
-		warn(" $f:$params{$f}\n");
-	}
-
-	warn("\nkeywords passed in were:\n");
-	my @keywords = $q->keywords;
-	foreach my $k (@keywords) {
-		warn(" $k\n");
-	}
-
-	warn("\nurl parameters passed in were:\n");
-	my @url_params = $q->url_param('keywords');
-	foreach my $k (@url_params) {
-		warn(" $k\n");
-	}
-
-	#my %headers = map { $_ => $q->http($_) } $q->http();
-	#my $headerDump = "\nGot the following headers:\n";
-	#for my $header ( keys %headers ) {
-	#	$headerDump = $headerDump . "$header: $headers{$header}\n";
+	#warn("\npost parameters passed in were: \n");
+	#my %params = $q->Vars;
+	#foreach my $f (keys (%params)) {
+	#	warn(" $f:$params{$f}\n");
 	#}
-	#warn($headerDump);
+
+	#warn("\nkeywords passed in were:\n");
+	#my @keywords = $q->keywords;
+	#foreach my $k (@keywords) {
+	#	warn(" $k\n");
+	#}
+
+	#warn("\nurl parameters passed in were:\n");
+	#my @url_params = $q->url_param('keywords');
+	#foreach my $k (@url_params) {
+	#	warn(" $k\n");
+	#}
 
 	my $gpg_headers = HTTP::Headers->new;
 	$gpg_headers->header(X_GPGAuth_Version => '1.3.0');
@@ -191,6 +184,7 @@ while (my $q = new CGI::Fast) {
 	else {
 		$gpg_headers->header(X_GPGAuth_Authenticated => 'true');
 
+		my @url_params = $q->url_param('keywords');
 		foreach my $k (@url_params) {
 			if ($k eq 'logout') {
 				$gpg_headers->header(X_GPGAuth_Authenticated => 'false');
