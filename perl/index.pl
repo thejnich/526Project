@@ -29,9 +29,7 @@ $db->do('CREATE TABLE users (id INTEGER PRIMARY KEY, username TEXT, user_token T
 my $gnupg = GnuPG::Interface->new();
 $gnupg->options->hash_init( armor   => 1,
                             homedir => "$ENV{'DOCUMENT_ROOT'}/.gnupg",
-                            always_trust => 1, meta_interactive => 0,
-                            meta_signing_key_id => '59F1E1F177716644',
-                            default_key => '59F1E1F177716644');
+                            always_trust => 1, meta_interactive => 0);
 
 
 while (my $q = new CGI::Fast) {
@@ -60,7 +58,7 @@ while (my $q = new CGI::Fast) {
 	$gpg_headers->header(X_GPGAuth_Verify_URL => '/index.pl?server_verify');
 	$gpg_headers->header(X_GPGAuth_Login_URL => '/index.pl?login');
 	$gpg_headers->header(X_GPGAuth_Logout_URL => '/index.pl?logout');
-	$gpg_headers->header(X_GPGAuth_Pubkey_URL => '/localhost.pub');
+	$gpg_headers->header(X_GPGAuth_Pubkey_URL => '/server.pub');
 
 	my $sid = $q->cookie('CGISESSID') || undef;
 
