@@ -30,7 +30,8 @@ my $gnupg = GnuPG::Interface->new();
 $gnupg->options->hash_init( armor   => 1,
                             homedir => "$ENV{'DOCUMENT_ROOT'}/.gnupg",
                             always_trust => 1, meta_interactive => 0,
-                            meta_signing_key_id => '59F1E1F177716644' );
+                            meta_signing_key_id => '59F1E1F177716644',
+                            default_key => '59F1E1F177716644');
 
 
 while (my $q = new CGI::Fast) {
@@ -87,16 +88,71 @@ while (my $q = new CGI::Fast) {
 		if ($q->param('gpg_auth:server_verify_token')) {
 			my $ciphertext = $q->param('gpg_auth:server_verify_token');
 
-			# warn("plaintext was: $plaintext");
 
-			#if ($pgp->errstr) {
+			my ( $input, $output, $error, $status_fh )
+			= ( IO::Handle->new(),
+				IO::Handle->new(),
+				IO::Handle->new(),
+				IO::Handle->new(),
+			);
+
+			my $handles = GnuPG::Handles->new( stdin      => $input,
+				stdout     => $output,
+				stderr     => $error,
+				status     => $status_fh,
+			);
+
+			# this sets up the communication
+			my $pid = $gnupg->decrypt( handles => $handles );
+
+			# this passes in the ciphertext
+			print $input $ciphertext;
+
+			# this closes the communication channel,
+			# indicating we are done
+			close $input;
+
+			my @plaintext    = <$output>;   # reading the output
+			my @error_output = <$error>;    # reading the error
+			my @status_info  = <$status_fh>;# read the status info
+
+			# clean up...
+			close $output;
+			close $error;
+			close $status_fh;
+
+			waitpid $pid, 0;  # clean up the finished GnuPG process
+
+			#warn(join('', @error_output));
+			#warn(join('', @status_info));
+			#
+			# gpg: encrypted with 4096-bit RSA key, ID F6ADE0E8, created 2012-02-08
+			#       "Kyle Milz <kylemilz@gmail.com>"
+			# gpg: encrypted with 2048-bit RSA key, ID 3A371D66, created 2012-02-23
+			#       "Perl Backend <localhost@localhost>"
+			# 
+			# [GNUPG:] ENC_TO 3C3CA5723A371D66 1 0
+			# [GNUPG:] GOOD_PASSPHRASE
+			# [GNUPG:] ENC_TO 52A35ACAF6ADE0E8 1 0
+			# [GNUPG:] NO_SECKEY 52A35ACAF6ADE0E8
+			# [GNUPG:] BEGIN_DECRYPTION
+			# [GNUPG:] PLAINTEXT 62 1330577442 
+			# [GNUPG:] PLAINTEXT_LENGTH 63
+			# [GNUPG:] DECRYPTION_OKAY
+			# [GNUPG:] GOODMDC
+			# [GNUPG:] END_DECRYPTION
+			#
+			# great, theres no easy way to detect a good decryption, sigh ..
+
+			#if ($error_output[0]) {
 			#	$gpg_headers->header(X_GPGAuth_Error => 'true');
-			#	$gpg_headers->header(X_GPGAuth_Verify_Response => $pgp->errstr);
+			#	$gpg_headers->header(X_GPGAuth_Verify_Response => join('', @error_output));
 			#}
 			#else {
-				# need to set server reponse to plaintext here too?
-				#$gpg_headers->header(X_GPGAuth_Verify_Response => $plaintext);
-				#}
+			#	# need to set server reponse to plaintext here too?
+			#	$gpg_headers->header(X_GPGAuth_Verify_Response => join('', @plaintext));
+			#}
+			$gpg_headers->header(X_GPGAuth_Verify_Response => join('', @plaintext));
 
 		}
 		elsif ($q->param('gpg_auth:keyid')) {
