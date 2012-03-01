@@ -6,7 +6,7 @@ use strict;
 
 use CGI::Fast;
 use CGI;
-use CGI::Session;
+use CGI::Session qw/-ip-match/;
 
 use DBI;
 use Digest::MD5 qw(md5 md5_hex md5_base64);
