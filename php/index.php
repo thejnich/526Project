@@ -65,7 +65,7 @@ if(!isset($_SESSION['keyid']) || !session_is_registered($_SESSION['keyid'])){
 		$CURRENT_PAGE = "Server Verification Test";
 
 		// specify the recipient to force decryption with a given key
-		$recipient = "cti.localhost";
+		$recipient = "localhost";
 
 		$ciphertext = $_POST['gpg_auth:server_verify_token'];
 
