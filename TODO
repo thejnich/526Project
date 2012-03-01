@@ -1,0 +1,13 @@
+
+perl:
+	- ?server_verify does not let the browser plugin know if an error occurred
+	  in decryption.
+	- GnuPG-Interface is clunky and kind of blows, should find a replacement
+	- Math::Random::Secure has lots of dependencies. Apparantly 
+	  Math::Random::ISAAC seeded with Math::TrulyRandom could also work, and
+	  with much less dependencies.
+
+
+php:
+	- mysql dependency is hard to swallow and not needed for basic setups.
+
