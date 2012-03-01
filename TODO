@@ -6,6 +6,8 @@ perl:
 	- Math::Random::Secure has lots of dependencies. Apparantly 
 	  Math::Random::ISAAC seeded with Math::TrulyRandom could also work, and
 	  with much less dependencies.
+	- Keep track of User-Agent string when issuing a cookie, then make sure it
+	  matches on every request w/ that cookie.
 
 
 php:
