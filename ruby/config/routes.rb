@@ -2,6 +2,7 @@ Ruby::Application.routes.draw do
   match "/server_verify", :to => "home#server_verify"
   match "/login", :to => "home#login"
   match "/logout", :to => "home#logout"
+  match "/localkey", :to => "home#localkey"
 
   # The priority is based upon order of creation:
   # first created -> highest priority.
