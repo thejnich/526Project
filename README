@@ -118,8 +118,8 @@ This requires the ruby application rails.
 
 ./run-backend --python
 
-Gentoo:
-	- py-gnupg
+Gentoo/Debian:
+	- python-gnupg (http://code.google.com/p/python-gnupg/)
 	- flup
 
 
