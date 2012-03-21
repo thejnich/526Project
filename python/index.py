@@ -2,7 +2,7 @@
 # -*- coding: UTF-8 -*-
 
 from cgi import  escape
-import sys, os, Cookie 
+import sys, os, Cookie, urllib, re 
 from flup.server.fcgi import WSGIServer
 from urlparse import parse_qs
 
@@ -27,6 +27,14 @@ def showEnviron(environ):
 	env.extend(['<tr><th>%s</th><td>%s</td></tr>' % (key, value) for key, value in sorted(environ.items())])
 	env.append('</table>')
 	return env
+
+def getFingerprint(gpg, keyid):
+	keys = gpg.list_keys()
+	for key in keys:
+		if key['keyid'] == keyid:
+			return key['fingerprint']
+	return ''
+
 
 def myapp(environ, start_response):
 	status = '200 ok'
@@ -85,15 +93,48 @@ def myapp(environ, start_response):
 		elif 'gpg_auth:keyid' in post:
 			if not ('gpg_auth:user_token_result' in post):
 				response_headers['X-GPGAuth-Progress'] = 'stage1'
-				debugPrint('keyid: %s' % post['gpg_auth:keyid'][0])
+				
+				keyid = post['gpg_auth:keyid'][0]
+				debugPrint('keyid: %s' % keyid)
+
 				# generate nonce and encrypt send to user........
+				# for now hard code
+				nonce = 'hello client'
+				plainText = 'gpgauthv1.3.0|'+str(len(nonce))+'|'+nonce+'|gpgauthv1.3.0'
+				debugPrint('Plaintext to encrtyp: %s' % plainText)
+
+
+				recipient_fingerprint = getFingerprint(gpg, keyid)
+				if recipient_fingerprint == '':
+					debugPrint('error finding fingerprint')
+					response_headers['X-GPGAuth-Error'] = 'true'
+					response_headers['X-GPGAuth-User-Auth-Token'] = 'error finding fingerprint'
+				else:
+					cipherText = str(gpg.encrypt(plainText, recipient_fingerprint, always_trust=True))
+					debugPrint('Encrypted data: %s' % cipherText)
+
+					# encode cipherText
+					cipherText = urllib.quote_plus(cipherText)
+					cipherText = re.sub('\.', '\\.', cipherText)
+					cipherText = re.sub('\+', '\\+', cipherText)
+					debugPrint('escaped cipher: %s' % cipherText)
+					
+
+					response_headers['X-GPGAuth-User-Auth-Token'] = cipherText	
 
 			else:
 				# we have both user key-id and decrypted version of token we prev provided client
 				# so either the client has verified identity of server, or selected proceed anyway
 				response_headers['X-GPGAuth-Progress'] = 'stage2'
-	
-
+				keyid = post['gpg_auth:keyid'][0]
+				token = post['gpg_auth:user_token_result']
+				if keyid == '' or token == '':
+					errmsg = 'stage 2 error, keyid or token is empty'
+					debugPrint(errmsg)
+					response_headers['X-GPGAuth-Error'] = 'true'
+					response_headers['X-GPGAuth-User-Auth-Token'] = errmsg
+				else:
+					debugPrint('token: %s' % token)
 		#cookie = Cookie.SimpleCookie()
 		#cookie[sessid] = '1234'
 		#response_headers['Set-Cookie'] = cookie.output(header='')	
