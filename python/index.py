@@ -6,7 +6,7 @@ import sys, os, Cookie
 from flup.server.fcgi import WSGIServer
 from urlparse import parse_qs
 
-#import GnuPGInterface
+import gnupg 
 
 sessid = 'PYSESSID'
 
@@ -18,7 +18,8 @@ page = '''
 </body>
 </html>
 '''
-
+def debugPrint(msg):
+	print >> sys.stderr, msg
 
 def showEnviron(environ):
 	env = []
@@ -28,7 +29,6 @@ def showEnviron(environ):
 	return env
 
 def myapp(environ, start_response):
-
 	status = '200 ok'
 
 	# create dictionary for response headers
@@ -49,7 +49,7 @@ def myapp(environ, start_response):
 	# get dictionary of query strings
 	url_params = parse_qs(environ['QUERY_STRING'], True)
 	
-
+	gpg = gnupg.GPG(gnupghome=os.environ['PWD']+'/python/.gnupg')
 
 	# use cookie to manage session, not functional
 	if not ('HTTP_COOKIE' in environ and sessid in environ['HTTP_COOKIE']):
@@ -67,14 +67,31 @@ def myapp(environ, start_response):
 		request_body = environ['wsgi.input'].read(request_body_size)
 		post = parse_qs(request_body)
 
-		print >> sys.stderr, 'post:\n%s' % post
+		debugPrint('post:\n%s' % post)
 		
 		if 'gpg_auth:server_verify_token' in post:
 			# client has requested server to verify itself
-			cipherText = post['gpg_auth:server_verify_token']
+			cipherText = post['gpg_auth:server_verify_token'][0]
 
-			print >> sys.stderr, 'verifying server...'	
+			debugPrint('verifying server...\nCipherText:\n'+cipherText)
+
 			# now decrypt and send response back to client
+			plainText = gpg.decrypt(cipherText)
+			if plainText == '':
+				debugPrint('challenge from client not decrypted. Check that keyring has right key')
+			else:
+				debugPrint('plaintext: ' + str(plainText))
+				response_headers['X-GPGAuth-Verify-Response'] = str(plainText)
+		elif 'gpg_auth:keyid' in post:
+			if not ('gpg_auth:user_token_result' in post):
+				response_headers['X-GPGAuth-Progress'] = 'stage1'
+				debugPrint('keyid: %s' % post['gpg_auth:keyid'][0])
+				# generate nonce and encrypt send to user........
+
+			else:
+				# we have both user key-id and decrypted version of token we prev provided client
+				# so either the client has verified identity of server, or selected proceed anyway
+				response_headers['X-GPGAuth-Progress'] = 'stage2'
 	
 
 		#cookie = Cookie.SimpleCookie()
