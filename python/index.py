@@ -95,6 +95,7 @@ def myapp(environ, start_response):
 				response_headers['X-GPGAuth-Progress'] = 'stage1'
 				
 				keyid = post['gpg_auth:keyid'][0]
+				gpg.recv_keys('keyserver.ubuntu.com', keyid)
 				debugPrint('keyid: %s' % keyid)
 
 				# generate nonce and encrypt send to user........
