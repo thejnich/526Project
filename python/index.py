@@ -2,7 +2,7 @@
 # -*- coding: UTF-8 -*-
 
 from cgi import  escape
-import sys, os, Cookie, urllib, re 
+import sys, os, Cookie, urllib, re, uuid, md5 
 from flup.server.fcgi import WSGIServer
 from urlparse import parse_qs
 
@@ -88,7 +88,7 @@ def myapp(environ, start_response):
 			if plainText == '':
 				debugPrint('challenge from client not decrypted. Check that keyring has right key')
 			else:
-				debugPrint('plaintext: ' + str(plainText))
+				debugPrint('plaintext:: ' + str(plainText))
 				response_headers['X-GPGAuth-Verify-Response'] = str(plainText)
 		elif 'gpg_auth:keyid' in post:
 			if not ('gpg_auth:user_token_result' in post):
@@ -100,7 +100,9 @@ def myapp(environ, start_response):
 
 				# generate nonce and encrypt send to user........
 				# for now hard code
-				nonce = 'hello client'
+
+				#nonce = '6d4e0e8625674d1f5d12f811a6bc82e4'
+				nonce = md5.new(uuid.uuid4().hex).hexdigest()
 				plainText = 'gpgauthv1.3.0|'+str(len(nonce))+'|'+nonce+'|gpgauthv1.3.0'
 				debugPrint('Plaintext to encrtyp: %s' % plainText)
 
@@ -111,7 +113,8 @@ def myapp(environ, start_response):
 					response_headers['X-GPGAuth-Error'] = 'true'
 					response_headers['X-GPGAuth-User-Auth-Token'] = 'error finding fingerprint'
 				else:
-					cipherText = str(gpg.encrypt(plainText, recipient_fingerprint, always_trust=True))
+					cipherText = str(gpg.encrypt(plainText, recipient_fingerprint, always_trust=True,
+					sign='1CB6F42F2FBCB423600C3E156EEA5FD5027EB2A9'))
 					debugPrint('Encrypted data: %s' % cipherText)
 
 					# encode cipherText
