@@ -2,7 +2,7 @@
 # -*- coding: UTF-8 -*-
 
 from cgi import  escape
-import sys, os, Cookie, urllib, re, uuid, md5 
+import sys, os, Cookie, urllib, re, uuid, md5, sqlite3 
 from flup.server.fcgi import WSGIServer
 from urlparse import parse_qs
 
@@ -37,6 +37,11 @@ def getFingerprint(gpg, keyid):
 
 
 def myapp(environ, start_response):
+	con = sqlite3.connect(os.environ['PWD']+'/python/users.db')
+	con.isolation_level = None
+	cur = con.cursor()
+	cur.execute('CREATE TABLE if not exists users (user_token TEXT, keyid TEXT UNIQUE); ')
+
 	status = '200 ok'
 
 	# create dictionary for response headers
@@ -101,7 +106,6 @@ def myapp(environ, start_response):
 				# generate nonce and encrypt send to user........
 				# for now hard code
 
-				#nonce = '6d4e0e8625674d1f5d12f811a6bc82e4'
 				nonce = md5.new(uuid.uuid4().hex).hexdigest()
 				plainText = 'gpgauthv1.3.0|'+str(len(nonce))+'|'+nonce+'|gpgauthv1.3.0'
 				debugPrint('Plaintext to encrtyp: %s' % plainText)
@@ -122,16 +126,20 @@ def myapp(environ, start_response):
 					cipherText = re.sub('\.', '\\.', cipherText)
 					cipherText = re.sub('\+', '\\+', cipherText)
 					debugPrint('escaped cipher: %s' % cipherText)
-					
 
 					response_headers['X-GPGAuth-User-Auth-Token'] = cipherText	
+
+					# insert keyid,plaintext token into db so it can be verified upon client response
+					t = (plainText,keyid)
+					cur.execute("REPLACE INTO users VALUES (?,?)", t)
+					debugPrint('inserted/updated db')
 
 			else:
 				# we have both user key-id and decrypted version of token we prev provided client
 				# so either the client has verified identity of server, or selected proceed anyway
 				response_headers['X-GPGAuth-Progress'] = 'stage2'
 				keyid = post['gpg_auth:keyid'][0]
-				token = post['gpg_auth:user_token_result']
+				token = post['gpg_auth:user_token_result'][0]
 				if keyid == '' or token == '':
 					errmsg = 'stage 2 error, keyid or token is empty'
 					debugPrint(errmsg)
@@ -139,10 +147,18 @@ def myapp(environ, start_response):
 					response_headers['X-GPGAuth-User-Auth-Token'] = errmsg
 				else:
 					debugPrint('token: %s' % token)
-		#cookie = Cookie.SimpleCookie()
-		#cookie[sessid] = '1234'
-		#response_headers['Set-Cookie'] = cookie.output(header='')	
-	else:
+					t = (token,keyid)
+					cur.execute("SELECT * FROM users WHERE user_token = ? AND keyid = ?", t)
+					result = cur.fetchall()
+					if len(result) != 0:
+						response_headers['X-GPGAuth-Progress'] = 'complete'
+						response_headers['X-GPGAuth-Authenticated'] = 'true'
+						#cookie = Cookie.SimpleCookie()
+						#cookie[sessid] = '1234'
+						#response_headers['Set-Cookie'] = cookie.output(header='')	
+
+
+	else: # of very first if, this code is BRUTAL
 		# The user already has a registered session
 		response_body.append('found session idi, THIS SHOULD NOT HAPPEN YET')
 
@@ -160,6 +176,8 @@ def myapp(environ, start_response):
 	# convert into a list of tuples, as expected by start_response
 	response_headers = [(k,v) for k,v in response_headers.items()]
 	
+
+	con.close()
 	start_response(status, response_headers)
 
 	return [ret]
