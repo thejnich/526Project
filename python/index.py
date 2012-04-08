@@ -103,9 +103,7 @@ def myapp(environ, start_response):
 				gpg.recv_keys('keyserver.ubuntu.com', keyid)
 				debugPrint('keyid: %s' % keyid)
 
-				# generate nonce and encrypt send to user........
-				# for now hard code
-
+				# generate nonce and encrypt send to user
 				nonce = md5.new(uuid.uuid4().hex).hexdigest()
 				plainText = 'gpgauthv1.3.0|'+str(len(nonce))+'|'+nonce+'|gpgauthv1.3.0'
 				debugPrint('Plaintext to encrtyp: %s' % plainText)
