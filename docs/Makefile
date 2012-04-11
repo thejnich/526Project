@@ -2,10 +2,12 @@
 # That's right, pdflatex has to be run 3 times.
 #
 
-all: proposal update
+all: proposal update final_report
 
-open: update
-	open status_update.pdf
+open: final_report
+	open Final_Report.pdf
+
+final_report: Final_Report.pdf
 
 proposal: proposal.pdf
 
@@ -22,6 +24,12 @@ status_update.pdf: status_update.tex refs.bib
 	bibtex status_update
 	pdflatex status_update.tex
 	pdflatex status_update.tex
+
+Final_Report.pdf: Final_Report.tex Makefile
+	pdflatex Final_Report.tex
+	bibtex Final_Report
+	pdflatex Final_Report.tex
+	pdflatex Final_Report.tex
 
 # This is ugly, rm -rf proposal.{aux,bbl,blg,...} doesn't work though
 clean:
@@ -40,5 +48,10 @@ clean:
 	rm -r status_update.pdf
 	rm -r status_update.toc
 	rm -r texput.log
+	rm -r Final_Report.aux
+	rm -r Final_Report.pdf
+	rm -r Final_Report.log
+	rm -r Final_Report.blg
+	rm -r Final_Report.bbl
 
 
