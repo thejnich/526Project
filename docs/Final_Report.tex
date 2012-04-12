@@ -27,6 +27,52 @@ We will provide a simple authentication protocol, lightweight server side implem
 \end{abstract}
 \pagebreak
 
+
+\section{Introduction} \label{sec:intro}
+Brief intro to problem with current web auth. Overview of our solution and implementation.
+
+
+
+\section{Protocol} \label{sec:protocol}
+Challenge response etc.
+
+\subsection{Overview} \label{subsec:overview}
+Three stages, brief sentence on each. Using http headers, key repo etc. Details in other subsections.
+
+\subsection{Server Authentication} \label{subsec:serverAuth}
+optional server auth description
+\subsection{Stage 0} \label{subsec:stage0}
+
+\subsection{Stage 1} \label{subsec:stage1}
+
+\subsection{Stage 2} \label{subsec:stage2}
+
+\subsection{Session Management} \label{sessionManagement}
+Describe cookies, how prevent session hijacking.
+
+
+\section{Implementation} \label{sec:implementation}
+Overview of implementation.
+
+\subsection{Client Side}
+Details of client
+\subsubsection{Goals}
+\subsubsection{Browser Extension}
+\subsubsection{GPG}
+
+\subsection{Server Side}
+Details of server
+\subsubsection{Goals}
+\subsubsection{PHP}
+\subsubsection{Perl}
+\subsubsection{Python}
+\subsubsection{Ruby}
+
+\subsection{Limitations}
+Not sure if this should be within the implementation section or not. Some limitations are general, some releated with how we chose to implement, ie dependencies etc. Maybe should be separate section.
+
+\section{Applications}
+
 \section{Related Works} \label{sec:relatedWorks}
 \subsection{Pwdhash} 
 Pwdhash\cite{pwdhash} is a project focused on creating an easy way to make the traditional web authentication protocol more secure. It uses a publicly available hash function to hash the domain name and the users password. The hash is then sent as the password to the website.\\
@@ -53,6 +99,9 @@ GpgAuth\cite{gpgauth} is an authentication mechanism which uses Public/Private (
 	The process works as follows: upon entering a website, the client uses the server's public key to encrypt a token of random data, generated locally.  The encrypted token is sent to the server, where it is decrypted using the server's private key, and then signed by the server before being returned.  The server then generates it's own token of random data and encrypts it to the tune of the client's public key.  The client's decrypted and signed token  and the server's encrypted token are then sent back to the client, who then knows that the server is who it says it is.  The client uses it's private key to decrypt the server's token, sign it, and then return it to the server, who then knows that the client is who it says it is.\\
 	In this implementation, a server-side database is required in order to store the public keys of the users, and the client is required to remember the public keys of domains/web services. It provides symmetric authentication. This is optional, you can easily leave out the server authentication, and just have the client authenticate to the server. It depends on the application, and how important it is that the client trust the identity of the server.\\
 	This project is very similar to our implementation, and parts of the actual implementation will be used by us.
+
+
+\section{Future Work}
 
 \pagebreak
 \bibliographystyle{plain}
