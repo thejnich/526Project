@@ -35,14 +35,17 @@ The goal of our project is to create and implement a Public Key Web Authenticati
 
 
 \section{Web Authentication} \label{sec:webauth}
-
+When a user wants to log into their account on a web service, the server hosting the service must verify that the user is the valid owner of the account. This is the purpose of authentication. Authentication is also useful in the other direction. The user should be able to verify they are communicating with a server they can trust.\\
+Authentication on the web is available through protocols such as SSH, TLS and HTTPS, which provide mutual authentication and secure communication between parties. These, however, do not provide authentication at the application layer, in the form of authenticating a specific user to their personal account on a server. Something similar, using symmetric or asymmetric keys, but at the application layer would be ideal for web authentication. This is exactly what public key web authentication does.  
 \subsection{Passwords} \label{subsec:passwords}
-
+The current standard for web authentication is password verification. The user provides a chosen password to the server, which verifies the password is correct, then provides the client access. There are multiple problems with this system.\\
+You are trusting that the server is going to protect your password. This means properly storing it, as a hashed and salted value, not in plain text. If the server is compromised you do not want your password exposed. This risk can also be mitigated by using different passwords for every account. This means users must remember many unique non-trivial passwords. This is not simple, and many users choose not to do this. Users consistently re-use passwords for multiple accounts \cite{domino}. Even users who choose to use different passwords, often choose very naive, simple passwords, which are easy for an adversary to break \cite{habits}. It would be far simpler and more secure if users just had to remember one simple passphrase, which would control access to every account they had. This is what public key web authentication provides. 
 \section{Protocol} \label{sec:protocol}
-Challenge response etc.
 
 \subsection{Overview} \label{subsec:overview}
-Three stages, brief sentence on each. Using http headers, key repo etc. Details in other subsections.
+The public key web authentication protocol we implemented is based on classic challenge response. The client and server both have a public private key pair. In order for the client to verify the server identity, they encrypt a random nonce with the expected servers public key. This is sent to the server, which then must decrypt the nonce and send it back in plain text to the client. If what the client receives is the same as the nonce it encrypted, it knows that it is communicating with who it thinks. The process is symmetric for the client to authenticate itself to the server. Upon signing up for a new account, the client provides an email address, which the server uses to look up the clients public key from the key repository. When the client visits the site, its public key ID is provided automatically. The server encrypts a random nonce with the clients public key, and sends it to the client. The client must then decrypt and reply back to the server. The server verifies that the response matches. If so, it can be sure that the client has the private key corresponding to the public key for the client owning the account, thus authenticating the client.\\
+The protocol consists of optional server authentication, then three stages in which the client is authenticated. Protocol messages are passed through HTTP headers. Keys are managed by external software on the client and server machine. Our implementation uses GnuPG, see Section \ref{sec:implementation} for more details. We also utilize a distributed public key repository to look up public keys.\\
+Once authenticated the user is granted a secure session cookie, which allows them to access secure content.
 
 \subsection{Server Authentication} \label{subsec:serverAuth}
 optional server auth description
@@ -57,7 +60,7 @@ Describe cookies, how prevent session hijacking.
 
 
 \section{Implementation} \label{sec:implementation}
-Overview of implementation.
+The implementation consists of both a client side and server side. They are simple and not robust, more just a proof of concept showing the protocol described in Section \ref{sec:protocol} could be implemented. The implementation is an extension of existing work by Kyle Huff, gpgAuth \cite{gpgauth}. gpgAuth provided us with a browser extension, which we modified slightly, and a skeleton server implementation in PHP. We added features to this implementation to make it easier to use and integrate into existing systems. We also ported it to three other languages commonly used in web back ends; Perl, Python, and Ruby. Our hope is to allow sites to adopt this system without having to worry that the language they use is not supported.  
 
 \subsection{Client Side}
 Details of client
