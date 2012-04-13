@@ -63,10 +63,12 @@ Describe cookies, how prevent session hijacking.
 The implementation consists of both a client side and server side. They are simple and not robust, more just a proof of concept showing the protocol described in Section \ref{sec:protocol} could be implemented. The implementation is an extension of existing work by Kyle Huff, gpgAuth \cite{gpgauth}. gpgAuth provided us with a browser extension, which we modified slightly, and a skeleton server implementation in PHP. We added features to this implementation to make it easier to use and integrate into existing systems. We also ported it to three other languages commonly used in web back ends; Perl, Python, and Ruby. Our hope is to allow sites to adopt this system without having to worry that the language they use is not supported. 
 
 \subsection{Client Side}
-The client side implementation uses existing key management software GnuPG to manage keys. The browser extension interacts with this through some CPP glue, namely gpgauth-npapi \cite{npapi}. The open source extension is for Chrome/Chomium browser and was originally written by Kyle Huff \cite{ext}. We forked his project \cite{extFork}, and made some slight modifications to encoding to suite our needs.  
+The client side implementation uses existing key management software GnuPG to manage keys. The browser extension interacts with this through an API written in CPP, namely gpgauth-npapi \cite{npapi}. The open source extension is for Chrome/Chomium browser and was originally written by Kyle Huff \cite{ext}. We forked his project \cite{extFork}, and made some slight modifications to encoding to suite our needs.  
 \subsubsection{Goals}
+The client side needs to be simple to use. After initial set up, we want the user to be able to seamlessly authenticate with sites. We want minimal keyboard input or other interaction from the user. The work should be carried out transparently behind the scenes, then provide the user with visual confirmation of authentication.
 \subsubsection{Browser Extension}
 \subsubsection{GPG}
+\subsubsection{gpgauth-npapi}
 
 \subsection{Server Side}
 Details of server
