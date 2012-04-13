@@ -29,9 +29,14 @@ We will provide a simple authentication protocol, lightweight server side implem
 
 
 \section{Introduction} \label{sec:intro}
-Brief intro to problem with current web auth. Overview of our solution and implementation.
+Authentication is an important part of our online activities. If you have an account with a web service, in order to log in you must authenticate yourself to the server. This ensures that you are the owner of the account. Almost all web sites currently use the username/password paradigm for authentication. Upon signing up for an account, the user provides a username or email, and a password. These are stored by the service, hopefully properly hashing the password, so that when the user returns, they provide their username and password, and the server can verify the information matches that in its database. This method works in theory, but there are problems (Seciton \ref{sec:webauth}). Weak passwords, managing many passwords, forgetting passwords are some examples, more are discussed in Section \ref{subsec:passwords}.\\
+Current solutions exist to help users to create and manage more secure passwords. These include \nameref{subsec:pwdhash}, 1Password, and KeePass. Most modern browsers allow you to save passwords for websites you visit, these are often stored in plain text. While these solutions are helpful, they don't solve the inherent problem. Web Authentication can be handled without the username/password paradigm all together. By utilizing well known methods of Public Key Authentication, and tying current key management tools to the browser, we can create a secure, easy to use, web authentication system.\\
+The goal of our project is to create and implement a Public Key Web Authentication system. This paper describes the protocol we used (Section \ref{sec:protocol}), the implementation details of our system (Section \ref{sec:implementation}), as well as applications (Section \ref{sec:applications}) and improvements to the system (Section \ref{sec:limitations},\ref{sec:futureWork}). The code for this project is available on GitHub \cite{526proj}. 
 
 
+\section{Web Authentication} \label{sec:webauth}
+
+\subsection{Passwords} \label{subsec:passwords}
 
 \section{Protocol} \label{sec:protocol}
 Challenge response etc.
@@ -68,13 +73,13 @@ Details of server
 \subsubsection{Python}
 \subsubsection{Ruby}
 
-\section{Limitations}
-Not sure if this should be within the implementation section or not. Some limitations are general, some releated with how we chose to implement, ie dependencies etc. Maybe should be separate section.
+\section{Limitations} \label{sec:limitations}
+Not sure if this should be within the implementation section or not. Some limitations are general, some releated with how we chose to implement, ie dependencies etc.
 
-\section{Applications}
+\section{Applications} \label{sec:applications}
 
 \section{Related Works} \label{sec:relatedWorks}
-\subsection{Pwdhash} 
+\subsection{Pwdhash}  \label{subsec:pwdhash}
 Pwdhash\cite{pwdhash} is a project focused on creating an easy way to make the traditional web authentication protocol more secure. It uses a publicly available hash function to hash the domain name and the users password. The hash is then sent as the password to the website.\\
 	With this setup, the user is protected from phishing websites that pretend to be another domain, and the user’s password is not sent over the connection - just a hash of the user's password. Therefore an eavesdropper cannot steal the password and gain access to all sites that the user has re-used that password.\\
 	On the downside, the user still has to remember a password, though different browser plug-ins can be configured to alleviate this caveat.\\
@@ -101,7 +106,7 @@ GpgAuth\cite{gpgauth} is an authentication mechanism which uses Public/Private (
 	This project is very similar to our implementation, and parts of the actual implementation will be used by us.
 
 
-\section{Future Work}
+\section{Future Work} \label{sec:futureWork}
 
 \pagebreak
 \bibliographystyle{plain}
