@@ -3,6 +3,9 @@
 \usepackage{color}
 \usepackage{hyperref}
 \usepackage{cite}
+\usepackage{graphicx}
+\usepackage{placeins}
+\graphicspath{{./images/}}
 
 \hypersetup{
     colorlinks,
@@ -75,8 +78,57 @@ The ability of users to sign other users public keys is crucial to the success o
 Our implementation needs users to generate a key pair with GPG, and publish their public key to the SKS OpenPGP Keyservers. Once this is done, they can set up the browser extension, which interfaces with GPG, and all authentication will be handled seamlessly. The user only has to occasionally enter their private key passphrase.
 
 \subsubsection{Browser Extension}
+The browser extension is build specifically for the Chrome/Chromium browser. It is written in Javascript. It was created by Kyle Huff as part of the gpgAuth project. We modified it slightly to suit our needs. Throughout work on this project we found many areas where the extension could be improved, but due to time constraints did not pursue them. See Section \ref{sec:futureWork} for more details.\\
+The extension has multiple dependencies. In order for it to function, these need to be properly installed on your system. The extension setup checks your system to ensure these are working, see Figure \ref{fig:ext_setup_check}.\\
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.3]{ext_setup_systemCheck}
+\caption{Screen shot of extension system check during setup}
+\label{fig:ext_setup_check}
+\end{figure}
 
-\subsubsection{gpgauth-npapi}
+The extension requires the npapi plugin, which is the interface between the extension and GPG. See Section \ref{subsubsec:npapi} for more details. The plugin requires libgpgme, which is an API that allows applications to easier interact with GPG. Key-agent is a program that handles the users passphrase for private keys. It is separate from the extension, so that when the user has to enter their passphrase it occurs locally and has no interaction with the insecure browser. Gpgconf allows applications to automatically modify GPG files. This allows for key signing and modification of a users key ring on the fly by an application. This way during setup you can sign keys from the extension. Also you can sign servers public keys during authentication.\\
+After a successful system check, the extension prompts you to choose select your minimum trust level. Level 0 is the most stringent, and requires that domains you authenticate to have public keys which are signed by one of your ultimately trusted keys. The least stringent level, Level 8, only requires that the servers public key be signed by a key you trust. These levels of trust can be seen in Figure \ref{fig:trust}. They change the type of prompts you will see when authenticating to a server, but you can always choose to proceed with authentication even if the server does not meet your trust requirements, Figure \ref{fig:untrusted} shows the prompt you see in this case, you can choose log in anyway.\\
+
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.3]{ext_setup_trust}
+\caption{Screen shot of extension trust levels}
+\label{fig:trust}
+\end{figure}
+
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.5]{ext_loginNotSigned}
+\caption{Prompt shown by extension when the key of the domain does not meet your minimum trust requirements}
+\label{fig:untrusted}
+\end{figure}
+
+The next step of setup ensures that you have a key pair generated. Figure \ref{fig:keysetup} shows this step. It will allow you to generate a new key through the extension.\\
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.3]{ext_setup_keys}
+\caption{Extension key setup}
+\label{fig:keysetup}
+\end{figure}
+
+Once setup is complete, you can begin using the extension to authenticate to domains that implement the protocol. When you visit a domain with the protocol implemented, an icon will show up next to the browsers address bar. By clicking the icon you will be able to login, or logout if already logged in. Figure \ref{fig:login} shows the prompt when clicking on the icon to login. Figure \ref{fig:logout} shows the prompt to logout. This figure also shows the icon with the addition of a lock. The lock appears when you have successfully authenticated to the domain.\\
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.5]{ext_login}
+\caption{Logging in. The icon only appears for sites that implement the protocol}
+\label{fig:login}
+\end{figure}
+
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.5]{ext_logout}
+\caption{Logging out. Note the lock over the icon, this means you are currently authenticated}
+\label{fig:logout}
+\end{figure}
+
+\FloatBarrier
+\subsubsection{gpgauth-npapi} \label{subsubsec:npapi}
 
 \subsection{Server Side}
 The server side implementation is based on work done by Kyle Huff \cite{gpgauth}. We took his open source PHP back end, and modified it making it easier to use. We then ported it to other languages to make it easier to adopt.
