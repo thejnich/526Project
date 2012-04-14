@@ -66,12 +66,13 @@ The implementation consists of both a client side and server side. They are simp
 The client side implementation uses existing key management software GnuPG to manage keys. The browser extension interacts with this through an API written in CPP, namely gpgauth-npapi \cite{npapi}. The open source extension is for Chrome/Chomium browser and was originally written by Kyle Huff \cite{ext}. We forked his project \cite{extFork}, and made some slight modifications to encoding to suite our needs.  
 \subsubsection{Goals}
 The client side needs to be simple to use. After initial set up, we want the user to be able to seamlessly authenticate with sites. We want minimal keyboard input or other interaction from the user. The work should be carried out transparently behind the scenes, then provide the user with visual confirmation of authentication.
-\subsubsection{Browser Extension}
+
 \subsubsection{GPG}
+\subsubsection{Browser Extension}
 \subsubsection{gpgauth-npapi}
 
 \subsection{Server Side}
-Details of server
+The server side implementation is based on work done by Kyle Huff \ref{cite:gpgauth}. We took his open source PHP back end, and modified it making it easier to use. We then ported it to other languages to make it easier to adopt.
 \subsubsection{Goals}
 \subsubsection{PHP}
 \subsubsection{Perl}
