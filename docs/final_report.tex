@@ -68,13 +68,21 @@ The client side implementation uses existing key management software GnuPG to ma
 The client side needs to be simple to use. After initial set up, we want the user to be able to seamlessly authenticate with sites. We want minimal keyboard input or other interaction from the user. The work should be carried out transparently behind the scenes, then provide the user with visual confirmation of authentication.
 
 \subsubsection{GPG}
+Gnu Privacy Guard (GPG) is a free implementation of the OpenPGP standard as defined by RFC4880 \cite{gpg}. It allows users to manage public/private key pairs, and encrypt, decrypt and sign data. It provides a command line interface that can interact with applications through various libraries. GPG is used in our implementation to manage the client and server key rings. It is used to encrypt and decrypt the random nonces used for authentication.\\
+With GPG users can easily create a key pair, and protect their private key with a strong passphrase. They are then able to publish their public keys to a public key server. Our implementation uses SKS OpenPGP Keyservers \cite{sks}, specifically the Ubuntu key server \cite{ubuntuKey}, although SKS keeps the entire pool of key servers synchronized.\\
+GPG also provides users with the ability to revoke public keys. This is important if a user's private key is compromised. They are able to revoke their public key on the key servers. Then when someone tries to authenticate using the compromised key, the web service server will look up the key from the key server and realize it has been revoked.\\
+The ability of users to sign other users public keys is crucial to the success of any public key authentication scheme. A web of trust between users gives them an idea how much a particular public key or signature should be trusted \cite{weboftrust}.\\
+Our implementation needs users to generate a key pair with GPG, and publish their public key to the SKS OpenPGP Keyservers. Once this is done, they can set up the browser extension, which interfaces with GPG, and all authentication will be handled seamlessly. The user only has to occasionally enter their private key passphrase.
+
 \subsubsection{Browser Extension}
+
 \subsubsection{gpgauth-npapi}
 
 \subsection{Server Side}
 The server side implementation is based on work done by Kyle Huff \cite{gpgauth}. We took his open source PHP back end, and modified it making it easier to use. We then ported it to other languages to make it easier to adopt.
 \subsubsection{Goals}
 The main goal with the server implementation is to make it easy to adopt. Sites currently using the standard method of password authentication are not going to want to make large infrastructure changes in order to adopt a new method of authentication. By creating single modules that handle the authentication process as described in Section \ref{sec:protocol}, in multiple languages the system becomes that much easier to adopt. We also wanted to minimize dependencies as much as possible, also for ease of implementation. We also tried where possible to use a lightweight database, like SQLite, to handle the storage of the original token and authenticated clients. 
+\subsubsection{GPG}
 \subsubsection{PHP}
 \subsubsection{Perl}
 \subsubsection{Python}
