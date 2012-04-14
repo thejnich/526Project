@@ -155,7 +155,7 @@ The client host requires gpg and the chrome browser extension to be installed.  
 Library dependencies in a our server-side implementation using PHP include sqlite, gpgme, automake, autoconf, libtool, m4, lighttpd, and php5-cgi.  The Perl implementation requires the Perl programming language and fastcgi, as well as a few libraries included in the Perl standard library.  The Ruby implementation requires the Ruby programming language, Rails 3.1.3, sqlite3, json, gpgme, and nokogiri.  The Python implementation requires the python programming language, cgi, flup and sqlite3.  Clearly, the server-side contains the bulk of our implementation's dependencies, though this is to be expected when working with so many different platforms.
 
 \subsection{Design Limitations}
-
+The most obvious constraint created by the design is the user's inability to login to web domains from computers that do not have the correct keys present.  
 
 \section{Applications} \label{sec:applications}
 \subsection{Enterprise Domain Security} \label{subsec:enterprisedomainsecurity}
