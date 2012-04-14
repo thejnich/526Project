@@ -5,9 +5,9 @@
 all: proposal update final_report
 
 open: final_report
-	open Final_Report.pdf
+	open final_report.pdf
 
-final_report: Final_Report.pdf
+final_report: final_report.pdf
 
 proposal: proposal.pdf
 
@@ -25,11 +25,11 @@ status_update.pdf: status_update.tex refs.bib
 	pdflatex status_update.tex
 	pdflatex status_update.tex
 
-Final_Report.pdf: Final_Report.tex Makefile
-	pdflatex Final_Report.tex
-	bibtex Final_Report
-	pdflatex Final_Report.tex
-	pdflatex Final_Report.tex
+final_report.pdf: final_report.tex Makefile
+	pdflatex final_report.tex
+	bibtex final_report
+	pdflatex final_report.tex
+	pdflatex final_report.tex
 
 # This is ugly, rm -rf proposal.{aux,bbl,blg,...} doesn't work though
 clean:
@@ -48,10 +48,10 @@ clean:
 	rm -r status_update.pdf
 	rm -r status_update.toc
 	rm -r texput.log
-	rm -r Final_Report.aux
-	rm -r Final_Report.pdf
-	rm -r Final_Report.log
-	rm -r Final_Report.blg
-	rm -r Final_Report.bbl
+	rm -r final_report.aux
+	rm -r final_report.pdf
+	rm -r final_report.log
+	rm -r final_report.blg
+	rm -r final_report.bbl
 
 
