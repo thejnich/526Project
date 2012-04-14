@@ -72,7 +72,7 @@ The client side needs to be simple to use. After initial set up, we want the use
 \subsubsection{gpgauth-npapi}
 
 \subsection{Server Side}
-The server side implementation is based on work done by Kyle Huff \ref{cite:gpgauth}. We took his open source PHP back end, and modified it making it easier to use. We then ported it to other languages to make it easier to adopt.
+The server side implementation is based on work done by Kyle Huff \cite{gpgauth}. We took his open source PHP back end, and modified it making it easier to use. We then ported it to other languages to make it easier to adopt.
 \subsubsection{Goals}
 The main goal with the server implementation is to make it easy to adopt. Sites currently using the standard method of password authentication are not going to want to make large infrastructure changes in order to adopt a new method of authentication. By creating single modules that handle the authentication process as described in Section \ref{sec:protocol}, in multiple languages the system becomes that much easier to adopt. We also wanted to minimize dependencies as much as possible, also for ease of implementation. We also tried where possible to use a lightweight database, like SQLite, to handle the storage of the original token and authenticated clients. 
 \subsubsection{PHP}
