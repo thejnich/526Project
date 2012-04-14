@@ -142,7 +142,16 @@ The main goal with the server implementation is to make it easy to adopt. Sites 
 \subsubsection{Ruby}
 
 \section{Limitations} \label{sec:limitations}
-Not sure if this should be within the implementation section or not. Some limitations are general, some releated with how we chose to implement, ie dependencies etc.
+The many software dependencies which we have encountered in building and porting our system are a product of our choices in the implementation, and are distinct from the limitations of the core idea of public-key web authentication.  Consequently, we've separated implementation limitations from design limitations into distinct sections for convenience.
+
+\subsection{Implementation Limitations}
+\subsubsection{Client Side}
+The client host requires gpg and the chrome browser extension to be installed.  It is possible to get rid of the gpg dependency, and doing so would make the implementation more user-friendly and much more likely to be adopted.
+\subsubsection{Server Side}
+Library dependencies in a our server-side implementation using PHP include sqlite, gpgme, automake, autoconf, libtool, m4, lighttpd, and php5-cgi.  The Perl implementation requires the Perl programming language and fastcgi, as well as a few libraries included in the Perl standard library.  The Ruby implementation requires the Ruby programming language, Rails 3.1.3, sqlite3, json, gpgme, and nokogiri.  The Python implementation requires the python programming language, cgi, flup and sqlite3.  Clearly, the server-side contains the bulk of our implementation's dependencies, though this is to be expected when working with so many different platforms.
+
+\subsection{Design Limitations}
+
 
 \section{Applications} \label{sec:applications}
 \subsection{Enterprise Domain Security} \label{subsec:enterprisedomainsecurity}
