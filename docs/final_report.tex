@@ -130,7 +130,7 @@ Once setup is complete, you can begin using the extension to authenticate to dom
 
 \FloatBarrier
 \subsubsection{gpgauth-npapi} \label{subsubsec:npapi}
-
+Gpgauth-npapi is a plugin written by Kyle Huff that allows the browser extension to interact with GPG on the users system. It is written in CPP and has binaries for Linux and Windows. This limited us to the systems we were able to successfully use our system on. There was no compatible binary for 64bit MacOSX. In order for the extension to work on a newer Mac, we would need to modify some of the libraries used by gpgauth-npapi. We were unable to compile the plugin for MacOSX 64bit architecture. This is a problem because this is a widely used platform.
 \subsection{Server Side}
 The server side implementation is based on work done by Kyle Huff \cite{gpgauth}. We took his open source PHP back end, and modified it making it easier to use. We then ported it to other languages to make it easier to adopt.
 \subsubsection{Goals}
