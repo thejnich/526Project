@@ -47,7 +47,7 @@ clean:
 	rm -r status_update.out
 	rm -r status_update.pdf
 	rm -r status_update.toc
-	rm -r texput.log
+	rm -rf texput.log
 	rm -r final_report.aux
 	rm -r final_report.pdf
 	rm -r final_report.log
