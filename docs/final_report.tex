@@ -53,20 +53,20 @@ Once authenticated the user is granted a secure session cookie, which allows the
 
 
 \subsection{Headers} \label{subsec:headers}
-These are the headers that can advertised, and an inline description of each.
+These are the headers that can be advertised, and an inline description of each.
 \begin{description}
-	\item[GPGAuth-Version] Version of protocol advertised
-	\item[GPGAuth-Requested] Whether the client has requested authorization
-	\item[GPGAuth-Verify-URL] URL that will complete optional server authentication
-	\item[GPGAuth-Login-URL] URL that is used for initiating a login attempt
-	\item[GPGAuth-Logout-URL] URL that will end the current authenticated session
-	\item[GPGAuth-Pubkey-URL] URL of the servers public key, used for import into clients local keyring to do server authentication among other things
-	\item[GPGAuth-Progress] String consisting of stage0/stage1/stage2 used for keeping track of how far along authentication has gone
-	\item[GPGAuth-Authenticated] Whether this session has been authenticated properly, is a boolean.
-	\item[GPGAuth-Verify-Response] Nonce plaintext response when doing optional server authentication
-	\item[GPGAuth-Error] General error messages that can be passed back to the client
+	\item[X-GPGAuth-Version:] Version of protocol advertised
+	\item[X-GPGAuth-Requested:] Whether the client has requested authorization
+	\item[X-GPGAuth-Verify-URL:] URL that will complete optional server authentication
+	\item[X-GPGAuth-Login-URL:] URL that is used for initiating a login attempt
+	\item[X-GPGAuth-Logout-URL:] URL that will end the current authenticated session
+	\item[X-GPGAuth-Pubkey-URL:]  URL of the servers public key, used for import into clients local keyring to do server authentication among other things
+	\item[X-GPGAuth-Progress:] St ring consisting of stage0/stage1/stage2 used for keeping track of how far along authentication has gone
+	\item[X-GPGAuth-Authenticated:] Whether this session has been authenticated properly, is a boolean.
+	\item[X-GPGAuth-Verify-Response:] Nonce plaintext response when doing optional server authentication
+	\item[X-GPGAuth-Error:] General error messages that can be passed back to the client
 	\item[GPGAuth-User-Auth-Token] Encrypted nonce from the server that is passed to the client for decryption, used in client authentication
-	\item[GPGAuth-Refer] URL that user is directed to upon successful authentication
+	\item[X-GPGAuth-Refer:] URL that user is directed to upon successful authentication
 \end{description}
 
 
