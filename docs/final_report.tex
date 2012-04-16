@@ -76,7 +76,7 @@ The challenge response mechanism is the exact same as the user authentication me
 This is a powerful concept because it gives the client confidence that the domain they think they are communicating with is in fact the domain they are communicating with. This mitigates security problems like DNS hijacking.
 
 \subsection{Stage 0} \label{subsec:stage0}
-The first stage of authentication consists of the web server advertising gpgAuth authentication. This includes the version, requested, verify-url, login-url, logout-url pubkey-url progress, and authenticated headers. Notable headers values include the progress header being set to stage0, and authenticated to false. \\
+The first stage of authentication consists of the web server advertising gpgAuth authentication. This includes the version, requested, verify-url, login-url, logout-url pubkey-url progress, and authenticated headers. Notable headers values include the progress header being set to stage0, and authenticated to false. All of these headers are sent with every response. \\
 If the client wishes to do the optional server authentication, then they must POST to the URL provided by the verify-url header an encrypted nonce which the server then decrypts and includes in the verify-response header it will provide in the response object. \\
 If the client wishes to authenticate, then they must POST to the URL provided by the login-url header the key id of their public key. This key id is either the last 8 or 16 hex characters of your public keys fingerprint. With this key id, the server can look up your public key on public key repositories like http://keyserver.ubuntu.com and will use this public key to encrypt messages to you. \\
 
@@ -93,7 +93,10 @@ If the nonce associated with the fingerprint matches the value of the user token
 If the nonce associated with the fingerprint does not match, then authentication is denied.
 
 \subsection{Session Management} \label{sessionManagement}
-Describe cookies, how prevent session hijacking.
+To maintain an authenticated session accross multiple pages in the same domain, a cookie is set by the server when a successful authentication has taken place. The contents of this cookie are how long it is good for, and the session id of the authenticated user. This cookie is then subject to mandatory submission by the users browser every time the domain is accessed. This behaviour is guaranteed by standards. \\
+The session id generated is implementation specific. The secure implementations will digest a concatenated string containing some variables like process id, current time, random number, and ip address of client. It is important to include the ip address of the client as this will harden the security of the cookie by not allowing someone from a different ip address to replay a cookie. In some unsavory implementations, ip address is not used in the session id and is less secure. \\
+Every time a user visits the domain, the set cookie will be transmitted in the request object. The server will perform a digest identical to the one that was used to generate the session id, and will check to see if the digest it just performed and the session id in the cookie match. If they do, the server can be sure this is the client it thinks it is. If they do not match, the client is redirected to stage0 authentication. \\
+The server keeps a local copy of data that is associated to session ids. The local data that is kept for this protocol is the clients key id. Thus, each session id is mapped to a key id without having to transmit the key id on every request. 
 
 
 \section{Implementation} \label{sec:implementation}
