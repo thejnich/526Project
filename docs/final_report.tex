@@ -77,14 +77,19 @@ The challenge response mechanism is the exact same as the user authentication me
 This is a powerful concept because it gives the client confidence that the domain they think they are communicating with is in fact the domain they are communicating with. This mitigates security problems like DNS hijacking.
 
 \subsection{Stage 0} \label{subsec:stage0}
-The first stage of authentication consists of the web server advertising GPGAuth authentication. This includes the version, requested, verify-url, login-url, logout-url pubkey-url progress, and authenticated headers. Notable headers values include the progress header being set to stage0, and authenticated to false. 
-If the client wishes to do the optional server authentication, then they must POST to the URL provided by the verify-url header an encrypted nonce which the server then decrypts and includes in the verify-response header it will provide on the next request. 
-If the client wishes to authenticate, then they must POST to the URL provided by the login-url header the key id of their public key. This key id is either the last 8 or 16 hex characters of your public keys fingerprint. With this keyid, the server can look up your public key on public key repositories like http://keyserver.ubuntu.com and will use this public key to encrypt messages to you.
+The first stage of authentication consists of the web server advertising GPGAuth authentication. This includes the version, requested, verify-url, login-url, logout-url pubkey-url progress, and authenticated headers. Notable headers values include the progress header being set to stage0, and authenticated to false. \\
+If the client wishes to do the optional server authentication, then they must POST to the URL provided by the verify-url header an encrypted nonce which the server then decrypts and includes in the verify-response header it will provide in the response object. \\
+If the client wishes to authenticate, then they must POST to the URL provided by the login-url header the key id of their public key. This key id is either the last 8 or 16 hex characters of your public keys fingerprint. With this keyid, the server can look up your public key on public key repositories like http://keyserver.ubuntu.com and will use this public key to encrypt messages to you. \\
 
 
 \subsection{Stage 1} \label{subsec:stage1}
+The only way to enter stage1 authentication is to POST to the login-url header value the clients key id. This key id is all the server needs to know about the client to look up the clients public key. \\
+This remote look up has several advantages. The first is that the client cannot provide their own public key because of the constraints of web browsers. The browser has only access to a small sandbox of the local file system, and thus cannot read the on disk public key. To get around this, a user can submit a public key to a key server which the server can query whenever the key is needed. There are other advantages to schemes like this that are outside the scope of this project. \\
+Once the server has received the key and has done a successful public key lookup, it will generate a random nonce, encrypt and sign it with the retrieved public key and the servers signature, and then populate the user-auth-token header with the encrypted and signed token. This header is then included in the response object that is sent back to the client. \\
+If an error occurs, the error header is set to true and the error message is sent in the user-auth-token header. If a successful encryption and signing is completed, a database of (fingerprint, nonce) pairs is updated with the latest nonce sent to a certain fingerprint. This is needed to verify the returned plain text nonce is the same as the one that was issued.
 
 \subsection{Stage 2} \label{subsec:stage2}
+
 
 \subsection{Session Management} \label{sessionManagement}
 Describe cookies, how prevent session hijacking.
