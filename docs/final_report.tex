@@ -51,13 +51,36 @@ The public key web authentication protocol we implemented is based on classic ch
 The protocol consists of optional server authentication, then three stages in which the client is authenticated. Protocol messages are passed through HTTP headers. Keys are managed by external software on the client and server machine. Our implementation uses GnuPG, see Section \ref{sec:implementation} for more details. We also utilize a distributed public key repository to look up public keys.\\
 Once authenticated the user is granted a secure session cookie, which allows them to access secure content.
 
+
+\subsection{Headers} \label{subsec:headers}
+These are the headers that can advertised, and an inline description of each.
+\begin{description}
+	\item[GPGAuth-Version] Version of protocol advertised
+	\item[GPGAuth-Requested] Whether the client has requested authorization
+	\item[GPGAuth-Verify-URL] URL that will complete optional server authentication
+	\item[GPGAuth-Login-URL] URL that is used for initiating a login attempt
+	\item[GPGAuth-Logout-URL] URL that will end the current authenticated session
+	\item[GPGAuth-Pubkey-URL] URL of the servers public key, used for import into clients local keyring to do server authentication among other things
+	\item[GPGAuth-Progress] String consisting of stage0/stage1/stage2 used for keeping track of how far along authentication has gone
+	\item[GPGAuth-Authenticated] Whether this session has been authenticated properly, is a boolean.
+	\item[GPGAuth-Verify-Response] Nonce plaintext response when doing optional server authentication
+	\item[GPGAuth-Error] General error messages that can be passed back to the client
+	\item[GPGAuth-User-Auth-Token] Encrypted nonce from the server that is passed to the client for decryption, used in client authentication
+	\item[GPGAuth-Refer] URL that user is directed to upon successful authentication
+\end{description}
+
+
 \subsection{Server Authentication} \label{subsec:serverAuth}
-Before the client reveals any information about who wants authentication, the client can optionally ensure that they are communicating with a server they trust. This is accomplished through the client obtaining an inital valid public key from the site it wishes to communicate with. For first time visits this can be accomplished through the GPGAuth browser extension, when it asks if you want to import a servers public key. Once an initial public key has been imported, every subsequent communication with that domain will use challenge response to verify that you are cwcommunicating to the same site.
+Before the client reveals any information about who wants authentication, the client can optionally ensure that they are communicating with a server they trust. This is accomplished through the client obtaining an initial valid public key from the site it wishes to communicate with. For first time visits this can be accomplished through the gpgAuth browser extension, when it asks if you want to import a servers public key. Once an initial public key has been imported, every subsequent communication with that domain will use challenge response to verify that you are communicating to the same site.
 TODO: picture here of import key dialog
-The challenge reponse mechanism is the exact same as the user authentication mechanism, except in reverse order. The client generates a random nonce, encrypts with the servers valid public key, and waits for the server to send back the decrypted nonce. If the sent and recieved nonces match, the client can be sure they are communicating with the same server they initially registered with.
+The challenge response mechanism is the exact same as the user authentication mechanism, except in reverse order. The client generates a random nonce, encrypts with the servers valid public key, and waits for the server to send back the decrypted nonce. If the sent and received nonces match, the client can be sure they are communicating with the same server they initially registered with.
 This is a powerful concept because it gives the client confidence that the domain they think they are communicating with is in fact the domain they are communicating with. This mitigates security problems like DNS hijacking.
 
 \subsection{Stage 0} \label{subsec:stage0}
+The first stage of authentication consists of the web server advertising GPGAuth authentication. This includes the version, requested, verify-url, login-url, logout-url pubkey-url progress, and authenticated headers. Notable headers values include the progress header being set to stage0, and authenticated to false. 
+If the client wishes to do the optional server authentication, then they must POST to the URL provided by the verify-url header an encrypted nonce which the server then decrypts and includes in the verify-response header it will provide on the next request. 
+If the client wishes to authenticate, then they must POST to the URL provided by the login-url header the key id of their public key. This key id is either the last 8 or 16 hex characters of your public keys fingerprint. With this keyid, the server can look up your public key on public key repositories like http://keyserver.ubuntu.com and will use this public key to encrypt messages to you.
+
 
 \subsection{Stage 1} \label{subsec:stage1}
 
