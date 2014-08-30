@@ -23,6 +23,7 @@
                      :   : :   : :  :      :      :   : :  
  
 
+We make no claims as to the correctness of the crypto code contained in this project. This is a proof of concept, nothing more.
 
 BACK END
 --------
@@ -121,30 +122,3 @@ This requires the ruby application rails.
 Gentoo/Debian:
 	- python-gnupg (http://code.google.com/p/python-gnupg/)
 	- flup
-
-
-USEFULNESS
-----------
-
-Some places that this scheme could be used (aka could use a backend):
-
-	- openwrt sign on page
-	- reddit
-	- slashdot
-	- hacker news
-	- ebay
-	- paypal
-	- ucalgary
-	- github
-	- gentoo bug wiki, forum, ..
-	- gmail
-	- linkedin
-	- anywhere you need an account
-
-	- facebook
-	- google+
-	- heroku
-	- lwn.net
-	- royalbank.ca
-	- airuc web auth
-
